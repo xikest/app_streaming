@@ -179,6 +179,7 @@ def main():
                     fig = px.imshow(wordcloud, binary_string=True)
                     fig.update_xaxes(visible=False)
                     fig.update_yaxes(visible=False)
+                    fig.update_layout(width=400, height=400)
                     st.plotly_chart(fig)
     # 두 번째 탭: Correlation Plot
     with tab2:
