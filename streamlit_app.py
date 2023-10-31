@@ -158,9 +158,10 @@ def main():
                     st.error('Please verify the file format', icon="🚨")
                     # st.subheader("3. Please verify the file format")
         
-        st.write("▶  Visualization")        
+                
         with col2_tab1:
             if st.session_state["tab1"] is not None:
+                st.write("▶  Visualization")
             # 오른쪽 영역 작성
                 tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["Plot", "Word Cloud"])   
                 with tab1_col2_tab1:
