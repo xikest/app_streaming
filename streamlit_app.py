@@ -67,10 +67,17 @@ def main():
     tab2.write("plot2")
     tab3.write("plot3")
     # You can also use "with" notation:
+
+
+
+
+
     with tab1:
+
         # 기능 구현 공간
         col1, col2 = st.columns(2)
         with col1:
+            flag_word_freq_df = False
             # 오른쪽 영역 작성
             st.subheader("데이터 준비")
             data_uploaded = st.file_uploader('File uploader')
@@ -107,23 +114,26 @@ def main():
                 # 빈도순으로 정렬
                 word_freq_df = word_freq_df.sort_values(by='Frequency', ascending=False)
                 st.dataframe(word_freq_df)
-                flag_word_freq_df = True
+                st.session_state["tab1"] = {"word_freq_df":word_freq_df}
+                st.session_state["tab1"] = {"nouns": nouns}
 
         with col2:
             # 오른쪽 영역 작성
             tab1, tab2 = st.tabs(["plot bar", "Word cloud"])
             tab1.write("plot bar")
             tab2.write("Word cloud")
-            if flag_word_freq_df:
+            if st.session_state["tab1"] is not None:
                 with tab1:
                     st.subheader("plot bar")
-                    top_words = word_freq_df.head(10)
+                    df = st.session_state["tab1"]["word_freq_df"]
+                    top_words = df.head(10)
                     fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
                     fig.update_xaxes(tickangle=45)
                     st.plotly_chart(fig)
 
                 with tab2:
                     st.subheader("Word Cloud")
+                    nouns = st.session_state["tab1"]["nouns"]
                      # Word Cloud 생성
                     wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
 
