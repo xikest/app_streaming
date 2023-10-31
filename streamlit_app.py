@@ -44,7 +44,7 @@ def main():
 
     
     # 제목
-    st.header("Visualization Streaming")
+    st.header("Plot Visualization")
     # 구분선
     #st.markdown("---")
 
