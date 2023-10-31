@@ -48,10 +48,10 @@ def main():
     # 구분선
     st.markdown("---")
     # 기본 설명
-    with st.expander("Project Description", expanded=True):
+    with st.expander("Description", expanded=True):
         st.write(
             """     
-            - 이 프로젝트는 간단한 text 분석을 지원 합니다.
+            - This project supports basic text analysis.
             """
         )
         st.markdown("---")
@@ -63,7 +63,8 @@ def main():
         #     password = st.text_input('Password')
         #     st.form_submit_button('Login')
         st.markdown("---")
-        st.markdown("이 프로젝트가 도움이 되었다면, 커피 한 잔의 후원은 큰 격려가 됩니다. ☕️")
+        st.markdown("이 프로젝트가 도움이 되었다면,")
+        st.markdown("커피 한 잔은 큰 격려가 됩니다. ☕️")
         st.markdown("---")
         st.write(
             """     
