@@ -11,9 +11,6 @@ from nltk import pos_tag
 from wordcloud import WordCloud
 import plotly.express as px
 
-nltk.download('punkt')
-nltk.download('stopwords')
-
 
 ##### 메인 함수 #####
 def main():
