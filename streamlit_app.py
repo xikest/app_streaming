@@ -86,7 +86,8 @@ def main():
                 if data_uploaded.name.endswith('.csv'):
                     df = pd.read_csv(data_uploaded)
                 elif data_uploaded.name.endswith('.xlsx'):
-                    df = pd.read_excel(data_uploaded)
+                    df = pd.read_excel(data_uploaded, engine='openpyxl')
+
                 else:
                     st.error("지원하지 않는 파일 형식입니다. CSV 또는 Excel 파일을 업로드해 주세요.")
                     st.stop()
