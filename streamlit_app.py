@@ -27,8 +27,9 @@ def main():
     flag_start = False
 
     # session state 초기화
-    if "dataframe" not in st.session_state:
-        st.session_state["dataframe"] = []
+    st.session_state.setdefault("tab1", None)
+    st.session_state.setdefault("tab2", None)
+    st.session_state.setdefault("tab3", None)
 
     # 제목
     st.header("plot streaming")
@@ -114,8 +115,7 @@ def main():
                 # 빈도순으로 정렬
                 word_freq_df = word_freq_df.sort_values(by='Frequency', ascending=False)
                 st.dataframe(word_freq_df)
-                st.session_state["tab1"] = {"word_freq_df":word_freq_df}
-                st.session_state["tab1"] = {"nouns": nouns}
+                st.session_state["tab1"] = {"word_freq_df": word_freq_df, "nouns": nouns}
 
         with col2:
             # 오른쪽 영역 작성
