@@ -47,14 +47,6 @@ def main():
     st.header("Visualization Streaming")
     # 구분선
     st.markdown("---")
-    # 기본 설명
-    with st.expander("Description", expanded=True):
-        st.write(
-            """     
-            - This project supports basic text analysis.
-            """
-        )
-        st.markdown("---")
 
     # 사이드바 생성
     with st.sidebar:
@@ -62,6 +54,14 @@ def main():
         #     username = st.text_input('Username')
         #     password = st.text_input('Password')
         #     st.form_submit_button('Login')
+
+        # 기본 설명
+        with st.expander("Description", expanded=True):
+            st.write(
+                """     
+                - This project supports basic text analysis.
+                """
+            )
         st.markdown("---")
         st.markdown("이 프로젝트가 도움이 되었다면,")
         st.markdown("커피 한 잔은 큰 격려가 됩니다. ☕️")
