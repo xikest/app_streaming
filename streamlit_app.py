@@ -142,17 +142,17 @@ def main():
                     # st.subheader("3. Please verify the file format")
         with col2_tab1:
             # 오른쪽 영역 작성
-            tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["plot-Bar", "Word cloud"])
+            tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["Plot", "Word Cloud"])
             if st.session_state["tab1"] is not None:
                 with tab1_col2_tab1:
-                    st.subheader("Plot bar")
+                    # st.subheader("Plot")
                     df = st.session_state["tab1"]["word_freq_df"]
                     top_words = df.head(10)
                     fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
                     fig.update_xaxes(tickangle=45)
                     st.plotly_chart(fig)
                 with tab2_col2_tab1:
-                    st.subheader("Word Cloud")
+                    # st.subheader("Word Cloud")
                     nouns = st.session_state["tab1"]["nouns"]
                      # Word Cloud 생성
                     wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
