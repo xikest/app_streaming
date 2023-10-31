@@ -158,9 +158,9 @@ def main():
                     st.error('Please verify the file format', icon="🚨")
                     # st.subheader("3. Please verify the file format")
         with col2_tab1:
-            # 오른쪽 영역 작성
-            tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["Plot", "Word Cloud"])
             if st.session_state["tab1"] is not None:
+            # 오른쪽 영역 작성
+                tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["Plot", "Word Cloud"])   
                 with tab1_col2_tab1:
                     # st.subheader("Plot")
                     df = st.session_state["tab1"]["df_word_freq"]
