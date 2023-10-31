@@ -46,7 +46,7 @@ def main():
     # 제목
     st.header("Visualization Streaming")
     # 구분선
-    st.markdown("---")
+    #st.markdown("---")
 
     # 사이드바 생성
     with st.sidebar:
@@ -56,7 +56,7 @@ def main():
         #     st.form_submit_button('Login')
 
         # 기본 설명
-        with st.expander("Description", expanded=True):
+        with st.expander("Project Description", expanded=True):
             st.write(
                 """     
                 - This project supports basic text analysis.
@@ -171,8 +171,8 @@ def main():
                 with tab2_col2_tab1:
                     # st.subheader("Word Cloud")
                     nouns = st.session_state["tab1"]["nouns"]
-                     # Word Cloud 생성
-                    wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
+                     # Word Cloud 생성 800*400
+                    wordcloud = WordCloud(width=400, height=400, background_color="white").generate(" ".join(nouns))
 
                     # Word Cloud를 Plotly 그래프로 표시
                     fig = px.imshow(wordcloud, binary_string=True)
