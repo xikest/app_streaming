@@ -12,10 +12,6 @@ from wordcloud import WordCloud
 import plotly.express as px
 
 
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('averaged_perceptron_tagger')
-
 
 ##### 메인 함수 #####
 def main():
@@ -31,6 +27,7 @@ def main():
     st.session_state.setdefault("tab2", None)
     st.session_state.setdefault("tab3", None)
 
+    
     # 제목
     st.header("plot streaming")
     # 구분선
@@ -98,6 +95,9 @@ def main():
                 # 데이터 처리
                 comments = df.iloc[:, 0]
                 all_words = []
+                nltk.download('punkt')
+                nltk.download('stopwords')
+                nltk.download('averaged_perceptron_tagger')
 
                 for comment in comments:
                     tokens = word_tokenize(comment)  # 문장을 단어로 토큰화
