@@ -36,10 +36,10 @@ def main():
     st.markdown("---")
 
     # 기본 설명
-    with st.expander("what is stream plot", expanded=True):
+    with st.expander("plot streaming", expanded=True):
         st.write(
             """     
-            - description
+            - 이 프로젝트는 simple text 분석을 지원 합니다.
             """
         )
 
@@ -107,30 +107,31 @@ def main():
                 # 빈도순으로 정렬
                 word_freq_df = word_freq_df.sort_values(by='Frequency', ascending=False)
                 st.dataframe(word_freq_df)
+                flag_word_freq_df = True
 
         with col2:
             # 오른쪽 영역 작성
             tab1, tab2 = st.tabs(["plot bar", "Word cloud"])
             tab1.write("plot bar")
             tab2.write("Word cloud")
+            if flag_word_freq_df:
+                with tab1:
+                    st.subheader("plot bar")
+                    top_words = word_freq_df.head(10)
+                    fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
+                    fig.update_xaxes(tickangle=45)
+                    st.plotly_chart(fig)
 
-            with tab1:
-                st.subheader("plot bar")
-                top_words = word_freq_df.head(10)
-                fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
-                fig.update_xaxes(tickangle=45)
-                st.plotly_chart(fig)
+                with tab2:
+                    st.subheader("Word Cloud")
+                     # Word Cloud 생성
+                    wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
 
-            with tab2:
-                st.subheader("Word Cloud")
-                 # Word Cloud 생성
-                wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
-
-                # Word Cloud를 Plotly 그래프로 표시
-                fig = px.imshow(wordcloud, binary_string=True)
-                fig.update_xaxes(visible=False)
-                fig.update_yaxes(visible=False)
-                st.plotly_chart(fig)
+                    # Word Cloud를 Plotly 그래프로 표시
+                    fig = px.imshow(wordcloud, binary_string=True)
+                    fig.update_xaxes(visible=False)
+                    fig.update_yaxes(visible=False)
+                    st.plotly_chart(fig)
 
     # 두 번째 탭: Correlation Plot
     with tab2:
