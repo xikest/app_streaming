@@ -134,16 +134,16 @@ def main():
                     # 빈도순으로 정렬
                     df_word_freq = df_word_freq.sort_values(by='Frequency', ascending=False)
                     st.subheader("3. Analysis results")
+
+
                     st.write("▶ Partial analysis results")
                     # st.info('Partial analysis results.', icon="ℹ️")
                     st.dataframe(df_word_freq.head(3))
                     st.session_state["tab1"] = {"df_word_freq": df_word_freq, "nouns": nouns}
 
-                    csv_word_freq = df_word_freq.to_csv(index=False).encode('utf-8')
-
                     # 다운로드 버튼 추가
-                    st.subheader("Download Analysis Results")
-                    st.write("You can download the analysis results in Excel format.")
+                    st.write("▶ Download Analysis Results")
+                    csv_word_freq = df_word_freq.to_csv(index=False).encode('utf-8')
                     st.download_button(
                         "Press to Download",
                         csv_word_freq,
@@ -151,6 +151,8 @@ def main():
                         "text/csv",
                         key='download-csv'
                     )
+
+
                 except:
                     st.error('Please verify the file format', icon="🚨")
                     # st.subheader("3. Please verify the file format")
