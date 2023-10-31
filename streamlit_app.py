@@ -157,6 +157,8 @@ def main():
                 except:
                     st.error('Please verify the file format', icon="🚨")
                     # st.subheader("3. Please verify the file format")
+        
+        st.write("▶  Visualization")        
         with col2_tab1:
             if st.session_state["tab1"] is not None:
             # 오른쪽 영역 작성
