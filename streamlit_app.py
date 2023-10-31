@@ -3,6 +3,7 @@ import streamlit as st
 from datetime import datetime
 import numpy as np
 import pandas as pd
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
