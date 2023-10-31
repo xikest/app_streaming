@@ -4,7 +4,6 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import nltk
-import nltk_utils
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
@@ -12,6 +11,8 @@ from nltk import pos_tag
 from wordcloud import WordCloud
 import plotly.express as px
 
+nltk.download('punkt')
+nltk.download('stopwords')
 
 
 ##### 메인 함수 #####
