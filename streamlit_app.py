@@ -30,6 +30,7 @@ def make_dataframe_ex() -> pd.DataFrame:
     df = pd.DataFrame(comments)
     return df
 
+
 def main():
     # 기본 설정
     st.set_page_config(
@@ -129,14 +130,27 @@ def main():
                     # 명사 빈도를 계산
                     noun_counts = FreqDist(nouns)
                     # 데이터프레임 생성
-                    word_freq_df = pd.DataFrame(list(noun_counts.items()), columns=['Nouns', 'Frequency'])
+                    df_word_freq = pd.DataFrame(list(noun_counts.items()), columns=['Nouns', 'Frequency'])
                     # 빈도순으로 정렬
-                    word_freq_df = word_freq_df.sort_values(by='Frequency', ascending=False)
+                    df_word_freq = df_word_freq.sort_values(by='Frequency', ascending=False)
                     st.subheader("3. Analysis results")
                     st.write("▶ Partial analysis results")
                     # st.info('Partial analysis results.', icon="ℹ️")
-                    st.dataframe(word_freq_df.head(3))
-                    st.session_state["tab1"] = {"word_freq_df": word_freq_df, "nouns": nouns}
+                    st.dataframe(df_word_freq.head(3))
+                    st.session_state["tab1"] = {"df_word_freq": df_word_freq, "nouns": nouns}
+
+                    csv_word_freq = df_word_freq.to_csv(index=False).encode('utf-8')
+
+                    # 다운로드 버튼 추가
+                    st.subheader("Download Analysis Results")
+                    st.write("You can download the analysis results in Excel format.")
+                    st.download_button(
+                        "Press to Download",
+                        csv_word_freq,
+                        "word_freq_analysis.csv",
+                        "text/csv",
+                        key='download-csv'
+                    )
                 except:
                     st.error('Please verify the file format', icon="🚨")
                     # st.subheader("3. Please verify the file format")
@@ -146,7 +160,7 @@ def main():
             if st.session_state["tab1"] is not None:
                 with tab1_col2_tab1:
                     # st.subheader("Plot")
-                    df = st.session_state["tab1"]["word_freq_df"]
+                    df = st.session_state["tab1"]["df_word_freq"]
                     top_words = df.head(10)
                     fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
                     fig.update_xaxes(tickangle=45)
