@@ -4,6 +4,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import nltk
+import nltk_utils
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
@@ -95,10 +96,7 @@ def main():
                 # 데이터 처리
                 comments = df.iloc[:, 0]
                 all_words = []
-                nltk.download('punkt')
-                nltk.download('stopwords')
-                nltk.download('averaged_perceptron_tagger')
-
+               
                 for comment in comments:
                     tokens = word_tokenize(comment)  # 문장을 단어로 토큰화
                     all_words.extend(tokens)
