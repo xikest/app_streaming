@@ -167,6 +167,7 @@ def main():
                     top_words = df.head(10)
                     fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
                     fig.update_xaxes(tickangle=45)
+                    fig.update_layout(width=400, height=400)
                     st.plotly_chart(fig)
                 with tab2_col2_tab1:
                     # st.subheader("Word Cloud")
