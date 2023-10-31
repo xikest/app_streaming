@@ -161,7 +161,7 @@ def main():
                 
         with col2_tab1:
             if st.session_state["tab1"] is not None:
-                st.write("▶  Visualization")
+                st.subheader("4. Visualization")
             # 오른쪽 영역 작성
                 tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["Plot", "Word Cloud"])   
                 with tab1_col2_tab1:
