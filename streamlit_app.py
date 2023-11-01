@@ -1,4 +1,3 @@
-##### 기본 정보 입력 #####
 import streamlit as st
 from datetime import datetime
 import numpy as np
@@ -11,10 +10,8 @@ from nltk import pos_tag
 from wordcloud import WordCloud
 import plotly.express as px
 
-
-
 def make_dataframe_ex() -> pd.DataFrame:
-    # 가상의 데이터 생성
+    # creating exmaple data
     comments = {
         'comments': [
             "This is a sample comment about data analysis. Data analysis is a crucial step in any research or business decision-making process. It involves collecting, cleaning, and interpreting data to gain valuable insights. Data analysts use various tools and techniques to uncover patterns and trends in data. In today's data-driven world, data analysis skills are in high demand.",
@@ -24,36 +21,27 @@ def make_dataframe_ex() -> pd.DataFrame:
             "Artificial intelligence (AI) is a transformative technology with applications in healthcare, finance, and more. AI systems can perform tasks that typically require human intelligence. These systems learn from data, recognize patterns, and make decisions. The growth of AI is expected to drive significant changes in various industries."
         ]
     }
-    # 데이터프레임 생성
+    # dataframe
     df = pd.DataFrame(comments)
     return df
 
-
 def main():
-    # 기본 설정
+    # basic setting
     st.set_page_config(
         page_title="plot stream",
         layout="wide")
 
-    # session state 초기화
+    # session state initialize
     st.session_state.setdefault("tab1", None)
     st.session_state.setdefault("tab2", None)
     st.session_state.setdefault("tab3", None)
-
     
-    # 제목
+    # Title
     st.header("Plot Visualization")
-    # 구분선
-    #st.markdown("---")
 
-    # 사이드바 생성
+    # Side bar
     with st.sidebar:
-        # with st.form(key='my_form'):
-        #     username = st.text_input('Username')
-        #     password = st.text_input('Password')
-        #     st.form_submit_button('Login')
-
-        # 기본 설명
+        # Basic description
         with st.expander("Project Description", expanded=True):
             st.write(
                 """     
@@ -61,7 +49,7 @@ def main():
                 """
             )
         st.markdown("---")
-        st.write("이 프로젝트가 도움이 되었다면, 커피 한 잔은 큰 격려가 됩니다. ☕️")
+        st.write("This project has been helpful, a cup of coffee would be a great encouragement. ☕️")
         st.markdown("---")
         st.write(
             """     
@@ -78,18 +66,16 @@ def main():
 
 
     with tab1:
-
-        # 기능 구현 공간
+        # function
         col1_tab1, col2_tab1 = st.columns(2)
         with col1_tab1:
             flag_word_freq_df = False
-            # 오른쪽 영역 작성
+            # Right seg
             st.subheader("1. Data Preparation")
             df_example = make_dataframe_ex()
             st.write("▶ Example: Input Data Form")
             st.write("'comments' column is the subject of analysis. Use the column name 'comments.'")
             st.write("If no column name is specified, the first column will be the subject of analysis.")
-            
             st.dataframe(df_example.head(2))            
             data_uploaded = st.file_uploader("▶ Upload CSV or Excel files only.")
             if data_uploaded is not None:
@@ -102,10 +88,9 @@ def main():
                     st.stop()
 
                 st.subheader("2. Data Preview")
-                # st.write("▶ Part of the data read")
                 st.dataframe(df.head(3))
 
-                # 데이터 처리
+                # extract data
                 try:
                     try:
                         comments = df['comments']
@@ -120,24 +105,21 @@ def main():
                     nltk.download('averaged_perceptron_tagger')
             
                     for comment in comments:
-                        tokens = word_tokenize(comment)  # 문장을 단어로 토큰화
+                        tokens = word_tokenize(comment)  # tokenize
                         all_words.extend(tokens)
-
-                    # 불용어 제거
+                    # stopward
                     stop_words = set(stopwords.words('english'))
                     filtered_words = [word.lower() for word in all_words if word.isalnum() and word.lower() not in stop_words]
-
-                    # 명사만 추출
+                    # nouns
                     nouns = [word for (word, tag) in pos_tag(filtered_words) if tag.startswith('N')]
-                    # 명사 빈도를 계산
+                    # nouns frequncy
                     noun_counts = FreqDist(nouns)
-                    # 데이터프레임 생성
                     df_word_freq = pd.DataFrame(list(noun_counts.items()), columns=['Nouns', 'Frequency'])
-                    # 빈도순으로 정렬
+                    # sorted
                     df_word_freq = df_word_freq.sort_values(by='Frequency', ascending=False)
                     st.subheader("3. Analysis results")
 
-                    # 다운로드 버튼 추가
+                    # download btn
                     # st.write("▶ Download Analysis Results")
                     csv_word_freq = df_word_freq.to_csv(index=False).encode('utf-8')
                     st.download_button(
@@ -148,26 +130,18 @@ def main():
                         key='download-csv'
                     )
                     
-
                     st.write("▶ Preview")
-                    # st.info('Partial analysis results.', icon="ℹ️")
                     st.dataframe(df_word_freq.head(3))
                     st.session_state["tab1"] = {"df_word_freq": df_word_freq, "nouns": nouns}
-
-
-
                 except:
                     st.error('Please verify the file format', icon="🚨")
                     # st.subheader("3. Please verify the file format")
-        
-                
+    
         with col2_tab1:
             if st.session_state["tab1"] is not None:
                 st.subheader("4. Visualization")
-            # 오른쪽 영역 작성
                 tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["Plot", "Word Cloud"])   
                 with tab1_col2_tab1:
-                    # st.subheader("Plot")
                     df = st.session_state["tab1"]["df_word_freq"]
                     top_words = df.head(10)
                     fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
@@ -175,21 +149,18 @@ def main():
                     # fig.update_layout(width=330, height=330)
                     st.plotly_chart(fig)
                 with tab2_col2_tab1:
-                    # st.subheader("Word Cloud")
                     nouns = st.session_state["tab1"]["nouns"]
-                     # Word Cloud 생성 800*400
+                     # Word Cloud: 800*400
                     wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
-
-                    # Word Cloud를 Plotly 그래프로 표시
                     fig = px.imshow(wordcloud, binary_string=True)
                     fig.update_xaxes(visible=False)
                     fig.update_yaxes(visible=False)
                     # fig.update_layout(width=330, height=330)
                     st.plotly_chart(fig)
-    # 두 번째 탭: Correlation Plot
+    # second tab: Correlation Plot
     with tab2:
         st.subheader("Correlation Plot Content")
-    # 세 번째 탭: LDA
+    # third tab: LDA
     with tab3:
         st.subheader("LDA Content")
 
