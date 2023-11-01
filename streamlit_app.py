@@ -88,9 +88,8 @@ def main():
             st.subheader("1. Data Preparation")
             df_example = make_dataframe_ex()
             st.write("▶ Example: Input Data Form")
-
-            st.write("'comments' column is the subject of analysis.
-                        Use the column name 'comments.'
+            st.markdown("'comments' column is the subject of analysis.  
+                        Use the column name 'comments.'  
                         If no column name is specified, the first column will be the subject of analysis.")
             
             st.dataframe(df_example.head(2))            
