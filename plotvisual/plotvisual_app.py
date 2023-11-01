@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 import numpy as np
 import pandas as pd
-import nltk
+import nltk_utils
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
@@ -100,9 +100,9 @@ def main():
                     all_words = []
 
                     #nltk data download
-                    nltk.download('punkt')
-                    nltk.download('stopwords')
-                    nltk.download('averaged_perceptron_tagger')
+                    # nltk.download('punkt')
+                    # nltk.download('stopwords')
+                    # nltk.download('averaged_perceptron_tagger')
             
                     for comment in comments:
                         tokens = word_tokenize(comment)  # tokenize
@@ -120,7 +120,6 @@ def main():
                     st.subheader("3. Analysis results")
 
                     # download btn
-                    # st.write("▶ Download Analysis Results")
                     csv_word_freq = df_word_freq.to_csv(index=False).encode('utf-8')
                     st.download_button(
                         "Download",
@@ -135,7 +134,6 @@ def main():
                     st.session_state["tab1"] = {"df_word_freq": df_word_freq, "nouns": nouns}
                 except:
                     st.error('Please verify the file format', icon="🚨")
-                    # st.subheader("3. Please verify the file format")
     
         with col2_tab1:
             if st.session_state["tab1"] is not None:
