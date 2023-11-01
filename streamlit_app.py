@@ -61,8 +61,7 @@ def main():
                 """
             )
         st.markdown("---")
-        st.write("이 프로젝트가 도움이 되었다면,")
-        st.write("커피 한 잔은 큰 격려가 됩니다. ☕️")
+        st.write(["이 프로젝트가 도움이 되었다면,", "커피 한 잔은 큰 격려가 됩니다. ☕️"])
         st.markdown("---")
         st.write(
             """     
