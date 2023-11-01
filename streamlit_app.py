@@ -89,17 +89,6 @@ def main():
             st.write("▶ Input Data Form Example")
             st.dataframe(df_example.head(2))
             
-            # 다운로드 버튼 추가
-            st.write("▶ Download Example")
-            # '엑셀 파일 다운로드' 버튼을 추가
-            if st.button('엑셀 파일 다운로드'):
-                # 엑셀 파일로 데이터 프레임을 저장하고 다운로드
-                st.write('엑셀 파일 다운로드')
-                df.to_excel('dataframe_example.xlsx', index=False, sheet_name='Sheet1', engine='openpyxl')
-                st.write('엑셀 파일 다운로드')
-                st.markdown(get_binary_file_downloader_html('dataframe_example.xlsx', '엑셀 파일 다운로드'), unsafe_allow_html=True)
-            
-
             data_uploaded = st.file_uploader("▶ Upload CSV or Excel files only.")
             if data_uploaded is not None:
                 if data_uploaded.name.endswith('.csv'):
