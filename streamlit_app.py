@@ -11,9 +11,7 @@ from nltk import pos_tag
 from wordcloud import WordCloud
 import plotly.express as px
 
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('averaged_perceptron_tagger')
+
 
 def make_dataframe_ex() -> pd.DataFrame:
     # 가상의 데이터 생성
@@ -88,26 +86,35 @@ def main():
             # 오른쪽 영역 작성
             st.subheader("1. Data Preparation")
             df_example = make_dataframe_ex()
-            # st.info('Input Data Form Example', icon="ℹ️")
             st.write("▶ Input Data Form Example")
             st.dataframe(df_example.head(2))
+            
+            # 다운로드 버튼 추가
+            st.write("▶ Download Example")
+            # '엑셀 파일 다운로드' 버튼을 추가
+            if st.button('엑셀 파일 다운로드'):
+                # 엑셀 파일로 데이터 프레임을 저장하고 다운로드
+                output = io.BytesIO()
+                with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                    df.to_excel(writer, sheet_name='Sheet1', index=False)
+            
+                output.seek(0)
+                st.write('엑셀 파일 다운로드')
+                st.download_as_bytearray(output, 'dataframe_example.xlsx', 'xlsx')
+            
 
             data_uploaded = st.file_uploader("▶ Upload CSV or Excel files only.")
             if data_uploaded is not None:
                 if data_uploaded.name.endswith('.csv'):
                     df = pd.read_csv(data_uploaded)
-                    # st.success('Data read success!', icon="✅")
                 elif data_uploaded.name.endswith('.xlsx'):
                     df = pd.read_excel(data_uploaded, engine='openpyxl')
-                    # st.success('Data read success!', icon="✅")
-
                 else:
                     st.error("This file format is not supported. Please upload a CSV or Excel file.")
                     st.stop()
 
                 st.subheader("2. Data Preview")
                 st.write("▶ Part of the data read")
-                # st.info('Part of the data read', icon="ℹ️")
                 st.dataframe(df.head(3))
 
                 # 데이터 처리
@@ -118,6 +125,12 @@ def main():
                         comments = df.iloc[:, 0]
 
                     all_words = []
+
+                    #nltk data download
+                    nltk.download('punkt')
+                    nltk.download('stopwords')
+                    nltk.download('averaged_perceptron_tagger')
+            
                     for comment in comments:
                         tokens = word_tokenize(comment)  # 문장을 단어로 토큰화
                         all_words.extend(tokens)
