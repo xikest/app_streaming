@@ -87,7 +87,7 @@ def main():
             # 오른쪽 영역 작성
             st.subheader("1. Data Preparation")
             df_example = make_dataframe_ex()
-            st.write("▶ Input Data Form Example")
+            st.write("▶ Example: Input Data Form")
             st.dataframe(df_example.head(2))
             
             data_uploaded = st.file_uploader("▶ Upload CSV or Excel files only.")
@@ -101,7 +101,7 @@ def main():
                     st.stop()
 
                 st.subheader("2. Data Preview")
-                st.write("▶ Part of the data read")
+                # st.write("▶ Part of the data read")
                 st.dataframe(df.head(3))
 
                 # 데이터 처리
