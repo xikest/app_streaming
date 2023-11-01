@@ -9,6 +9,10 @@ from nltk.probability import FreqDist
 from nltk import pos_tag
 from wordcloud import WordCloud
 import plotly.express as px
+import pyLDAvis.gensim
+import gensim
+import gensim.corpora as corpora
+
 
 def make_dataframe_ex() -> pd.DataFrame:
     # creating exmaple data
@@ -66,7 +70,7 @@ def main():
 
     with tab1:
         # function
-        col1_tab1, col2_tab1 = st.columns(2)
+        col1_tab1, col2_tab1, col3_tab1 = st.columns(3)
         with col1_tab1:
             flag_word_freq_df = False
             # Right seg
@@ -154,6 +158,34 @@ def main():
                     fig.update_yaxes(visible=False)
                     # fig.update_layout(width=330, height=330)
                     st.plotly_chart(fig)
+
+
+        with col3_tab1:
+
+            # 토픽 모델링에 사용할 샘플 데이터 생성 (실제로는 여러 문서로 구성된 말뭉치를 사용해야 합니다)
+            data = [
+                "텍스트 데이터 분석을 위한 토픽 모델링은 중요한 작업입니다.",
+                "LDA (Latent Dirichlet Allocation)는 토픽 모델링의 일종입니다.",
+                "텍스트 데이터에서 토픽을 추출하려면 LDA 모델을 사용할 수 있습니다.",
+                "pyLDAvis는 토픽 모델링 결과를 시각화하는 도구 중 하나입니다.",
+            ]
+
+            # 데이터 전처리: 텍스트 데이터를 토큰화하고 딕셔너리를 생성합니다.
+            data_words = [gensim.utils.simple_preprocess(text, deacc=True) for text in data]
+            dictionary = corpora.Dictionary(data_words)
+            corpus = [dictionary.doc2bow(text) for text in data_words]
+
+            # LDA 모델 학습
+            lda_model = gensim.models.LdaModel(corpus=corpus, id2word=dictionary, num_topics=2)
+
+            # Streamlit 앱 시작
+            st.title("토픽 모델링 시각화")
+
+            # pyLDAvis 시각화
+            pyLDAvis.enable_notebook()
+            vis = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary)
+            st.pydeck_chart(vis)
+
     # second tab: Correlation Plot
     with tab2:
         st.subheader("Correlation Plot Content")
