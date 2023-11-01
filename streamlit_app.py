@@ -37,8 +37,8 @@ def main():
 
     # session state 초기화
     st.session_state.setdefault("tab1", None)
-    # st.session_state.setdefault("tab2", None)
-    # st.session_state.setdefault("tab3", None)
+    st.session_state.setdefault("tab2", None)
+    st.session_state.setdefault("tab3", None)
 
     
     # 제목
@@ -71,8 +71,8 @@ def main():
         )
 
     # Insert containers separated into tabs:
-    # tab1, tab2, tab3 = st.tabs(["Word Frequency", "Correlation", "LDA"])
-    tab1 = st.tabs(["Word Frequency"])
+    tab1, tab2, tab3 = st.tabs(["Word Frequency", "Correlation", "LDA"])
+    # tab1 = st.tabs(["Word Frequency"])
     # tab1.write("EDA")
     # tab2.write("plot2")
     # tab3.write("plot3")
@@ -184,12 +184,12 @@ def main():
                     fig.update_yaxes(visible=False)
                     # fig.update_layout(width=330, height=330)
                     st.plotly_chart(fig)
-    # # 두 번째 탭: Correlation Plot
-    # with tab2:
-    #     st.subheader("Correlation Plot Content")
-    # # 세 번째 탭: LDA
-    # with tab3:
-    #     st.subheader("LDA Content")
+    # 두 번째 탭: Correlation Plot
+    with tab2:
+        st.subheader("Correlation Plot Content")
+    # 세 번째 탭: LDA
+    with tab3:
+        st.subheader("LDA Content")
 
 if __name__ == "__main__":
     main()
