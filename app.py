@@ -28,6 +28,8 @@ def make_dataframe_ex() -> pd.DataFrame:
     # dataframe
     df = pd.DataFrame(comments)
     return df
+
+
 def main():
     # basic setting
     st.set_page_config(
@@ -38,7 +40,7 @@ def main():
     st.session_state.setdefault("tab1", None)
     st.session_state.setdefault("tab2", None)
     st.session_state.setdefault("tab3", None)
-    
+
     # Title
     st.header("Plot Visualization")
 
@@ -61,12 +63,11 @@ def main():
         )
 
     # Insert containers separated into tabs:
-    tab1, tab2, tab3 = st.tabs(["Text Analysis", "Correlation", "LDA"])
+    tab1, tab2, tab3 = st.tabs(["Word Frequency", "Correlation", "LDA"])
     # tab1 = st.tabs(["Word Frequency"])
     # tab1.write("EDA")
     # tab2.write("plot2")
     # tab3.write("plot3")
-
 
     with tab1:
         # function
@@ -79,7 +80,7 @@ def main():
             st.write("▶ Example: Input Data Form")
             st.write("'comments' column is the subject of analysis. Use the column name 'comments.'")
             st.write("If no column name is specified, the first column will be the subject of analysis.")
-            st.dataframe(df_example.head(2))            
+            st.dataframe(df_example.head(2))
             data_uploaded = st.file_uploader("▶ Upload CSV or Excel files only.")
             if data_uploaded is not None:
                 if data_uploaded.name.endswith('.csv'):
@@ -102,17 +103,18 @@ def main():
 
                     all_words = []
 
-                    #nltk data download
+                    # nltk data download
                     nltk.download('punkt')
                     nltk.download('stopwords')
                     nltk.download('averaged_perceptron_tagger')
-            
+
                     for comment in comments:
                         tokens = word_tokenize(comment)  # tokenize
                         all_words.extend(tokens)
                     # stopward
                     stop_words = set(stopwords.words('english'))
-                    filtered_words = [word.lower() for word in all_words if word.isalnum() and word.lower() not in stop_words]
+                    filtered_words = [word.lower() for word in all_words if
+                                      word.isalnum() and word.lower() not in stop_words]
                     # nouns
                     nouns = [word for (word, tag) in pos_tag(filtered_words) if tag.startswith('N')]
                     # nouns frequncy
@@ -123,6 +125,7 @@ def main():
                     st.subheader("3. Analysis results")
 
                     # download btn
+                    # st.write("▶ Download Analysis Results")
                     csv_word_freq = df_word_freq.to_csv(index=False).encode('utf-8')
                     st.download_button(
                         "Download",
@@ -131,17 +134,18 @@ def main():
                         "text/csv",
                         key='download-csv'
                     )
-                    
+
                     st.write("▶ Preview")
                     st.dataframe(df_word_freq.head(3))
                     st.session_state["tab1"] = {"df_word_freq": df_word_freq, "nouns": nouns}
                 except:
                     st.error('Please verify the file format', icon="🚨")
-    
+                    # st.subheader("3. Please verify the file format")
+
         with col2_tab1:
             if st.session_state["tab1"] is not None:
                 st.subheader("4. Visualization")
-                tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["Plot", "Word Cloud"])   
+                tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["Plot", "Word Cloud"])
                 with tab1_col2_tab1:
                     df = st.session_state["tab1"]["df_word_freq"]
                     top_words = df.head(10)
@@ -151,15 +155,13 @@ def main():
                     st.plotly_chart(fig)
                 with tab2_col2_tab1:
                     nouns = st.session_state["tab1"]["nouns"]
-                     # Word Cloud: 800*400
+                    # Word Cloud: 800*400
                     wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
                     fig = px.imshow(wordcloud, binary_string=True)
                     fig.update_xaxes(visible=False)
                     fig.update_yaxes(visible=False)
                     # fig.update_layout(width=330, height=330)
                     st.plotly_chart(fig)
-
-
         with col3_tab1:
 
             # 토픽 모델링에 사용할 샘플 데이터 생성 (실제로는 여러 문서로 구성된 말뭉치를 사용해야 합니다)
@@ -186,6 +188,7 @@ def main():
             vis = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary)
             st.pydeck_chart(vis)
 
+
     # second tab: Correlation Plot
     with tab2:
         st.subheader("Correlation Plot Content")
@@ -193,5 +196,7 @@ def main():
     with tab3:
         st.subheader("LDA Content")
 
+
 if __name__ == "__main__":
     main()
+
