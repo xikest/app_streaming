@@ -136,22 +136,23 @@ def main():
                     df_word_freq = df_word_freq.sort_values(by='Frequency', ascending=False)
                     st.subheader("3. Analysis results")
 
-
-                    st.write("▶ Partial analysis results")
-                    # st.info('Partial analysis results.', icon="ℹ️")
-                    st.dataframe(df_word_freq.head(3))
-                    st.session_state["tab1"] = {"df_word_freq": df_word_freq, "nouns": nouns}
-
                     # 다운로드 버튼 추가
-                    st.write("▶ Download Analysis Results")
+                    # st.write("▶ Download Analysis Results")
                     csv_word_freq = df_word_freq.to_csv(index=False).encode('utf-8')
                     st.download_button(
-                        "Press to Download",
+                        "Download",
                         csv_word_freq,
                         "word_freq_analysis.csv",
                         "text/csv",
                         key='download-csv'
                     )
+                    
+
+                    st.write("▶ Preview")
+                    # st.info('Partial analysis results.', icon="ℹ️")
+                    st.dataframe(df_word_freq.head(3))
+                    st.session_state["tab1"] = {"df_word_freq": df_word_freq, "nouns": nouns}
+
 
 
                 except:
