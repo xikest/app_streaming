@@ -88,8 +88,12 @@ def main():
             st.subheader("1. Data Preparation")
             df_example = make_dataframe_ex()
             st.write("▶ Example: Input Data Form")
-            st.dataframe(df_example.head(2))
+
+            st.write("'comments' column is the subject of analysis.")
+            st.write("Use the column name 'comments.'")
+            st.write("If no column name is specified, the first column will be the subject of analysis.")
             
+            st.dataframe(df_example.head(2))            
             data_uploaded = st.file_uploader("▶ Upload CSV or Excel files only.")
             if data_uploaded is not None:
                 if data_uploaded.name.endswith('.csv'):
