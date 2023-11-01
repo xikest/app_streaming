@@ -94,13 +94,10 @@ def main():
             # '엑셀 파일 다운로드' 버튼을 추가
             if st.button('엑셀 파일 다운로드'):
                 # 엑셀 파일로 데이터 프레임을 저장하고 다운로드
-                output = io.BytesIO()
-                with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                    df.to_excel(writer, sheet_name='Sheet1', index=False)
-            
-                output.seek(0)
                 st.write('엑셀 파일 다운로드')
-                st.download_as_bytearray(output, 'dataframe_example.xlsx', 'xlsx')
+                df.to_excel('dataframe_example.xlsx', index=False, sheet_name='Sheet1', engine='openpyxl')
+                st.write('엑셀 파일 다운로드')
+                st.markdown(get_binary_file_downloader_html('dataframe_example.xlsx', '엑셀 파일 다운로드'), unsafe_allow_html=True)
             
 
             data_uploaded = st.file_uploader("▶ Upload CSV or Excel files only.")
