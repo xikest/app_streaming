@@ -37,8 +37,8 @@ def main():
 
     # session state 초기화
     st.session_state.setdefault("tab1", None)
-    st.session_state.setdefault("tab2", None)
-    st.session_state.setdefault("tab3", None)
+    # st.session_state.setdefault("tab2", None)
+    # st.session_state.setdefault("tab3", None)
 
     
     # 제목
