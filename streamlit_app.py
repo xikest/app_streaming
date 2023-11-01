@@ -61,7 +61,7 @@ def main():
                 """
             )
         st.markdown("---")
-        st.write("이 프로젝트가 도움이 되었다면,\n 커피 한 잔은 큰 격려가 됩니다. ☕️")
+        st.write("이 프로젝트가 도움이 되었다면,\n커피 한 잔은 큰 격려가 됩니다. ☕️")
         st.markdown("---")
         st.write(
             """     
@@ -87,7 +87,7 @@ def main():
             st.subheader("1. Data Preparation")
             df_example = make_dataframe_ex()
             st.write("▶ Example: Input Data Form")
-            st.write("'comments' column is the subject of analysis. \n Use the column name 'comments.' \n If no column name is specified, the first column will be the subject of analysis.")
+            st.write("'comments' column is the subject of analysis. \nUse the column name 'comments.' \nIf no column name is specified, the first column will be the subject of analysis.")
             
             st.dataframe(df_example.head(2))            
             data_uploaded = st.file_uploader("▶ Upload CSV or Excel files only.")
