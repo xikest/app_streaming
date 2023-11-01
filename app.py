@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 import numpy as np
 import pandas as pd
-import nltk_utils
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist
@@ -24,7 +24,6 @@ def make_dataframe_ex() -> pd.DataFrame:
     # dataframe
     df = pd.DataFrame(comments)
     return df
-
 def main():
     # basic setting
     st.set_page_config(
@@ -58,7 +57,7 @@ def main():
         )
 
     # Insert containers separated into tabs:
-    tab1, tab2, tab3 = st.tabs(["Word Frequency", "Correlation", "LDA"])
+    tab1, tab2, tab3 = st.tabs(["Text Analysis", "Correlation", "LDA"])
     # tab1 = st.tabs(["Word Frequency"])
     # tab1.write("EDA")
     # tab2.write("plot2")
@@ -100,9 +99,9 @@ def main():
                     all_words = []
 
                     #nltk data download
-                    # nltk.download('punkt')
-                    # nltk.download('stopwords')
-                    # nltk.download('averaged_perceptron_tagger')
+                    nltk.download('punkt')
+                    nltk.download('stopwords')
+                    nltk.download('averaged_perceptron_tagger')
             
                     for comment in comments:
                         tokens = word_tokenize(comment)  # tokenize
