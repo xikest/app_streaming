@@ -31,20 +31,28 @@ def call_example_comments() -> pd.DataFrame:
     st.write("(1) 'comments' column is the subject of analysis. Use the column name 'comments.'")
     st.write("(2) If no column name is specified, the first column will be the subject of analysis.")
     return st.dataframe(df.head(2))
-def read_comments_from(data_uploaded, column_name="comments")->pd.DataFrame:
+
+
+def read_comments_from(data_uploaded, column_name="comments") -> pd.Series:
     df = pd.DataFrame()
-    if data_uploaded.name.endswith('.csv'):
-        df = pd.read_csv(data_uploaded)
-    elif data_uploaded.name.endswith('.xlsx'):
-        df = pd.read_excel(data_uploaded, engine='openpyxl')
+    supported_formats = ['.csv', '.xlsx', '.txt']
+
+    if data_uploaded.name.endswith(tuple(supported_formats)):
+        if data_uploaded.name.endswith('.csv'):
+            df = pd.read_csv(data_uploaded)
+        elif data_uploaded.name.endswith('.xlsx'):
+            df = pd.read_excel(data_uploaded, engine='openpyxl')
+        elif data_uploaded.name.endswith('.txt'):
+            df = pd.read_csv(data_uploaded, delimiter='\t')  # Assuming tab-separated text file
     else:
-        st.error("This file format is not supported. Please upload a CSV or Excel file.")
+        st.error("This file format is not supported. Please upload a CSV, Excel, or text file.")
         st.stop()
+
     try:
-        # st.dataframe(df.head(3))
         comments = df.loc[:, column_name]
     except KeyError:
         comments = df.iloc[:, 0]
+
     return comments
 def prepare_networkg(text) ->"corpus, dictionary":
 
