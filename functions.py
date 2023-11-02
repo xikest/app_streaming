@@ -100,7 +100,7 @@ def download_df_as_csv(df):
         key='download-csv'
     )
     return st.dataframe(df.head(3))
-def plot_freq(df_word_freq, num_dis:int=5):
+def plot_freq(df_word_freq, num_dis:int=10):
     top_words = df_word_freq.head(num_dis)
     fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
     fig.update_xaxes(tickangle=45)
@@ -117,8 +117,7 @@ def plot_wordcloud(nouns):
 def plot_networkg(corpus, dictionary):
     # LDA 모델 학습
     lda_model = gensim.models.LdaModel(corpus, num_topics=3, id2word=dictionary, passes=10)
-
-    # LDA 모델에서 주제 추출
+    # LDA 모델에서 topic 추출
     topics = lda_model.show_topics(num_topics=3, num_words=5)  # 주제당 상위 5개 단어 출력
 
     # 그래프 생성
@@ -135,7 +134,7 @@ def plot_networkg(corpus, dictionary):
             G.add_node(word, node_type='word')  # 단어 노드에 'node_type' 속성 추가
             G.add_edge(node_label, word, weight=float(prob))
 
-    # 노드 크기를 최소 5에서 최대 50으로 정규화하여 설정
+    # 노드 크기를 최소 100에서 최대 1000으로 정규화하여 설정
     node_degrees = dict(G.degree)
     min_size = 100
     max_size = 1000

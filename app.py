@@ -75,7 +75,7 @@ def main():
                 tab1_col2_tab1, tab2_col2_tab1, tab3_col2_tab1 = st.tabs(["Plot", "Word Cloud", "Network Graph"])
                 with tab1_col2_tab1:
                     df_word_freq = st.session_state["tab1"]["plot_df_word_freq"]
-                    plot_freq(df_word_freq, num_dis=5)
+                    plot_freq(df_word_freq)
                 with tab2_col2_tab1:
                     nouns = st.session_state["tab1"]["wordcloud_nouns"]
                     plot_wordcloud(nouns)
