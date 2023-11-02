@@ -55,7 +55,7 @@ def main():
         with col1_tab1:
             st.subheader("1. Data Preparation")
             df_example = call_example_comments()
-            download_df_as_csv(df_example, file_name="example_text_data", key="download_csv_text_example")
+            download_df_as_csv(df_example, file_name="example_text_data", key="download_csv_text_example", label="Sample")
             text_data_uploaded = st.file_uploader("Upload Text data", key="time_text_data")
             if text_data_uploaded is not None:
                 try:
@@ -71,7 +71,7 @@ def main():
                                                 "network_dictionary":dictionary}
                     st.subheader("2. Analysis results")
                     # download btn
-                    download_df_as_csv(df_word_freq, file_name="word_freq_analysis", key="download_csv_text_analysis")
+                    download_df_as_csv(df_word_freq, file_name="word_freq_analysis", key="download_csv_text_analysis", label="Result")
                 except:
                     st.error('Please verify the file format', icon="🚨")
         with col2_tab1:
@@ -93,7 +93,7 @@ def main():
         with col1_tab3:
             st.subheader("1. Data Preparation")
             df_example = call_example_timeseries()
-            download_df_as_csv(df_example, "example_timeseries_data", key="download_csv_timeseries_example")
+            download_df_as_csv(df_example, "example_timeseries_data", key="download_csv_timeseries_example", label="Sample")
             time_data_uploaded = st.file_uploader("Upload Time Series", key="time_series_uploader")
             if time_data_uploaded is not None:
                 try:

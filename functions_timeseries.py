@@ -1,14 +1,8 @@
-import pandas as pd
-import numpy as np
-import datetime
-import streamlit as st
-import statsmodels.api as sm
-import matplotlib.pyplot as plt
+
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import adfuller
-from functions_text import *
-import yfinance as yf
 from prophet import Prophet
+from functions_text import *
 
 def call_example_timeseries():
     # df = yf.download("AAPL", start="2017-01-01", end="2023-04-30")

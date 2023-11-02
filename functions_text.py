@@ -12,7 +12,6 @@ import gensim
 from gensim import corpora
 import re
 import nltk
-import base64
 
 def call_example_comments() -> pd.DataFrame:
     # creating exmaple data
@@ -49,8 +48,8 @@ def read_comments_from(data_uploaded, column_name="comments") -> pd.Series:
     except KeyError:
         comments = df.iloc[:, 0]
     return comments
-    
-def prepare_networkg(text) ->"corpus, dictionary":
+
+def prepare_networkg(text) -> "corpus, dictionary":
     text = text.lower()
     text = re.sub(r'[^a-zA-Z\s]', '', text)
     words = word_tokenize(text)
@@ -64,28 +63,13 @@ def prepare_networkg(text) ->"corpus, dictionary":
     dictionary = corpora.Dictionary([nouns_adjectives])
     corpus = [dictionary.doc2bow(nouns_adjectives)]
     return corpus, dictionary
-<<<<<<< HEAD:functions_text.py
-<<<<<<< HEAD:functions_text.py
 
-def prepare_nouns(comments):
-    all_words = []
-    # nltk data download
-
-
-=======
-=======
->>>>>>> 9b9381205764598fe37b058b447aa69afea7e219:functions.py
-    
 def prepare_nouns(comments):
     all_words = []
     # nltk data download
     nltk.download('punkt')
     nltk.download('stopwords')
     nltk.download('averaged_perceptron_tagger')
-<<<<<<< HEAD:functions_text.py
->>>>>>> 9b9381205764598fe37b058b447aa69afea7e219:functions.py
-=======
->>>>>>> 9b9381205764598fe37b058b447aa69afea7e219:functions.py
     for comment in comments:
         tokens = word_tokenize(comment)  # tokenize
         all_words.extend(tokens)
@@ -104,45 +88,29 @@ def prepare_word_freq(nouns) -> pd.DataFrame:
     # sorted
     df_word_freq = df_word_freq.sort_values(by='Frequency', ascending=False)
     return df_word_freq
-<<<<<<< HEAD:functions_text.py
-<<<<<<< HEAD:functions_text.py
 
 
-def download_df_as_csv(df: pd.DataFrame, file_name: str, key:str, preview=True) -> None:
+def download_df_as_csv(df: pd.DataFrame, file_name: str, key:str, preview=True, label:str="Download") -> None:
     csv_file = df.to_csv(index=False).encode('utf-8')
-=======
-=======
->>>>>>> 9b9381205764598fe37b058b447aa69afea7e219:functions.py
-    
-def download_df_as_csv(df):
-    csv_word_freq = df.to_csv(index=False).encode('utf-8')
->>>>>>> 9b9381205764598fe37b058b447aa69afea7e219:functions.py
     st.download_button(
-        "Download",
+        label,
         csv_file,
         f"{file_name}.csv",
         "text/csv",
         key=key
     )
-<<<<<<< HEAD:functions_text.py
     if preview:
         st.dataframe(df.head(2))
     return None
 
-=======
-    return st.dataframe(df.head(3))
-    
-<<<<<<< HEAD:functions_text.py
->>>>>>> 9b9381205764598fe37b058b447aa69afea7e219:functions.py
-=======
->>>>>>> 9b9381205764598fe37b058b447aa69afea7e219:functions.py
-def plot_freq(df_word_freq, num_dis:int=10):
+def plot_freq(df_word_freq, num_dis: int = 10):
     top_words = df_word_freq.head(num_dis)
     fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
     fig.update_xaxes(tickangle=45)
     fig.update_layout(width=800, height=400)
     return st.plotly_chart(fig, use_container_width=True)
-    
+
+
 def plot_wordcloud(nouns):
     # Create a WordCloud object with the desired settings
     wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
@@ -152,6 +120,7 @@ def plot_wordcloud(nouns):
     plt.axis("off")
     # Display the Matplotlib figure within Streamlit
     st.pyplot(plt, use_container_width=True)
+
 
 def plot_networkg(corpus, dictionary):
     # LDA model learn
