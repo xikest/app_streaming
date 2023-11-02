@@ -17,20 +17,30 @@ def main():
     # Side bar
     with st.sidebar:
         # Basic description
-        with st.expander("Project Description", expanded=False):
-            st.write(
-                """     
-                - This project supports basic text analysis.
-                """
-            )
+        st.subheader("Project Description")
+        st.write("This project supports basic text analysis.")
         st.markdown("---")
-        st.write("This project has been helpful, a cup of coffee would be a great encouragement. ☕️")
+
+        with st.expander("Usage", expanded=True):
+            st.markdown("**1. Data Preparation**")
+            st.write("- Upload a CSV or Excel file containing text data.")
+
+            st.markdown("**2. Analysis Results**")
+            st.write("- Review data summaries, including the most frequent words.")
+            st.write("- Download word frequency analysis results as a CSV file.")
+
+            st.markdown("**3. Visualization**")
+            st.write("- Visualize top words and their frequencies in a bar chart.")
+            st.write("- Generate word frequency in graphic format using a word cloud.")
+            st.write("- Create a network graph of topics and related words using LDA.")
+
         st.markdown("---")
         st.write(
             """     
-            Written by TJ.Kim
+            Written by TJ.Kim ☕
             """
         )
+        st.markdown("---")
 
     # Insert containers separated into tabs:
     tab1, tab2, tab3 = st.tabs(["Text Analysis", "Numeric Analysis", "Time Series Analysis"])
@@ -44,11 +54,10 @@ def main():
         col1_tab1, col2_tab1 = st.columns([1, 2])
 
         with col1_tab1:
-            flag_word_freq_df = False
             # Right seg
             st.subheader("1. Data Preparation")
             call_example_comments()
-            data_uploaded = st.file_uploader("※ Upload CSV, Excel, or Text files only.")
+            data_uploaded = st.file_uploader("")
             if data_uploaded is not None:
                 # st.subheader("Data Preview")
                 # extract data
