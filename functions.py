@@ -109,11 +109,11 @@ def plot_freq(df_word_freq, num_dis:int=10):
     top_words = df_word_freq.head(num_dis)
     fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
     fig.update_xaxes(tickangle=45)
-    fig.update_layout(width=800, height=500)
+    fig.update_layout(width=800, height=400)
     return st.plotly_chart(fig, use_container_width=True)
 def plot_wordcloud(nouns):
     # Create a WordCloud object with the desired settings
-    wordcloud = WordCloud(width=800, height=500, background_color="white").generate(" ".join(nouns))
+    wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
 
     # Create a Matplotlib figure and axis
     plt.figure(figsize=(8, 5))
@@ -157,7 +157,7 @@ def plot_networkg(corpus, dictionary):
     node_colors = ['lightblue' if G.nodes[node]['node_type'] == 'topic' else 'lightgray' for node in
                    G.nodes]  # 토픽 노드와 단어 노드에 다른 색상 적용
 
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(8, 4))
     nx.draw(G, pos, with_labels=True, node_size=node_size, width=edge_width, node_color=node_colors,
             font_size=8)
     plt.axis('off')
