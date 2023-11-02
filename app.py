@@ -51,7 +51,7 @@ def main():
 
             data_uploaded = st.file_uploader("")
             if data_uploaded is not None:
-                # st.subheader("2. Data Preview")
+                # st.subheader("Data Preview")
                 # extract data
                 try:
                     comments = read_comments_from(data_uploaded, column_name="comments")
