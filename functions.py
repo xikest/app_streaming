@@ -33,7 +33,6 @@ def call_example_comments() -> pd.DataFrame:
 def read_comments_from(data_uploaded, column_name="comments") -> pd.Series:
     df = pd.DataFrame()
     supported_formats = ['.csv', '.xlsx', '.txt']
-
     if data_uploaded.name.endswith(tuple(supported_formats)):
         if data_uploaded.name.endswith('.csv'):
             df = pd.read_csv(data_uploaded)
@@ -44,40 +43,33 @@ def read_comments_from(data_uploaded, column_name="comments") -> pd.Series:
     else:
         st.error("This file format is not supported. Please upload a CSV, Excel, or text file.")
         st.stop()
-
     try:
         comments = df.loc[:, column_name]
     except KeyError:
         comments = df.iloc[:, 0]
-
     return comments
+    
 def prepare_networkg(text) ->"corpus, dictionary":
-
-    # 텍스트 전처리: 소문자로 변환, 특수 문자 및 숫자 제거
     text = text.lower()
     text = re.sub(r'[^a-zA-Z\s]', '', text)
-    # 단어 토큰화
     words = word_tokenize(text)
-    # 불용어 제거
     stop_words = set(stopwords.words('english'))
     filtered_words = [word for word in words if word not in stop_words]
-
-    # LDA를 위한 토픽 모델링 준비
-    # 형용사와 명사 추출 (품사 태깅을 활용)
+    # prepare to topic modeling for ldaLDA
+    # extract nouns_adjectives
     nouns_adjectives = [word for word, pos in nltk.pos_tag(filtered_words) if
                         pos in ['NN', 'NNS', 'JJ']]
-
-    # LDA 모델을 위한 말뭉치 생성
+    # create copus for LDA 
     dictionary = corpora.Dictionary([nouns_adjectives])
     corpus = [dictionary.doc2bow(nouns_adjectives)]
     return corpus, dictionary
+    
 def prepare_nouns(comments):
     all_words = []
     # nltk data download
     nltk.download('punkt')
     nltk.download('stopwords')
     nltk.download('averaged_perceptron_tagger')
-
     for comment in comments:
         tokens = word_tokenize(comment)  # tokenize
         all_words.extend(tokens)
@@ -88,6 +80,7 @@ def prepare_nouns(comments):
     # nouns
     nouns = [word for (word, tag) in pos_tag(filtered_words) if tag.startswith('N')]
     return nouns
+    
 def prepare_word_freq(nouns) -> pd.DataFrame:
     # nouns frequncy
     noun_counts = FreqDist(nouns)
@@ -95,6 +88,7 @@ def prepare_word_freq(nouns) -> pd.DataFrame:
     # sorted
     df_word_freq = df_word_freq.sort_values(by='Frequency', ascending=False)
     return df_word_freq
+    
 def download_df_as_csv(df):
     csv_word_freq = df.to_csv(index=False).encode('utf-8')
     st.download_button(
@@ -105,57 +99,53 @@ def download_df_as_csv(df):
         key='download-csv'
     )
     return st.dataframe(df.head(3))
+    
 def plot_freq(df_word_freq, num_dis:int=10):
     top_words = df_word_freq.head(num_dis)
     fig = px.bar(top_words, x='Nouns', y='Frequency', title="Top 10 Words Frequency")
     fig.update_xaxes(tickangle=45)
     fig.update_layout(width=800, height=400)
     return st.plotly_chart(fig, use_container_width=True)
+    
 def plot_wordcloud(nouns):
     # Create a WordCloud object with the desired settings
     wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
-
     # Create a Matplotlib figure and axis
     plt.figure(figsize=(8, 5))
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
-
     # Display the Matplotlib figure within Streamlit
     st.pyplot(plt, use_container_width=True)
 
 def plot_networkg(corpus, dictionary):
-    # LDA 모델 학습
+    # LDA model learn
     lda_model = gensim.models.LdaModel(corpus, num_topics=2, id2word=dictionary, passes=10)
-    # LDA 모델에서 topic 추출
-    topics = lda_model.show_topics(num_topics=2, num_words=8)  # 주제당 상위 5개 단어 출력
-
-    # 그래프 생성
+    # exteact topic from lda
+    topics = lda_model.show_topics(num_topics=2, num_words=8)  # 2 topic & top word 8
+    # create graph
     G = nx.Graph()
-
-    # 주제를 노드로 추가
+    # add topic as node
     for topic, words in topics:
         node_label = f"Topic {topic}"
-        G.add_node(node_label, node_type='topic')  # 토픽 노드에 'node_type' 속성 추가
+        G.add_node(node_label, node_type='topic')  # add type 'node_type' on tpoc node
         word_list = words.split('+')
         for word in word_list:
             prob, word = word.split('*')
             word = word.strip()
-            G.add_node(word, node_type='word')  # 단어 노드에 'node_type' 속성 추가
+            G.add_node(word, node_type='word')  # add type 'node_type' on word node
             G.add_edge(node_label, word, weight=float(prob))
-
-    # 노드 크기를 최소 100에서 최대 1000으로 정규화하여 설정
+    # node size define from 100 to 1000 with nomarlize
     node_degrees = dict(G.degree)
     min_size = 100
     max_size = 1000
     node_size = [
         min_size + (max_size - min_size) * (node_degrees[node] - min(node_degrees.values())) / (
                 max(node_degrees.values()) - min(node_degrees.values()) + 1) for node in G.nodes]
-
     # graph viusalize
     pos = nx.spring_layout(G, seed=42)
     edge_width = [data['weight'] * 10 for _, _, data in G.edges(data=True)]
     node_colors = ['lightblue' if G.nodes[node]['node_type'] == 'topic' else 'lightgray' for node in
-                   G.nodes]  # 토픽 노드와 단어 노드에 다른 색상 적용
+                   G.nodes]  # set each color to nodes
 
     plt.figure(figsize=(8, 4))
     nx.draw(G, pos, with_labels=True, node_size=node_size, width=edge_width, node_color=node_colors,
