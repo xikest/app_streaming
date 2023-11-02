@@ -22,7 +22,7 @@ pip install -r requirements.txt
 
 
 
-Project Description
+#Project Description
 This project allows you to upload a CSV or Excel file containing text data. It focuses on text analysis, word frequency analysis, word cloud generation, and topic modeling through network graph visualization.
 
 Features
