@@ -1,3 +1,4 @@
+
 from functions import *
 def main():
     # basic setting

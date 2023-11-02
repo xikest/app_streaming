@@ -116,7 +116,7 @@ def plot_wordcloud(nouns):
     return st.plotly_chart(fig, use_container_width=True)
 def plot_networkg(corpus, dictionary):
     # LDA 모델 학습
-    lda_model = gensim.models.LdaModel(corpus, num_topics=3, id2word=dictionary, passes=10)
+    lda_model = gensim.models.LdaModel(corpus, num_topics=2, id2word=dictionary, passes=10)
     # LDA 모델에서 topic 추출
     topics = lda_model.show_topics(num_topics=3, num_words=5)  # 주제당 상위 5개 단어 출력
 
@@ -144,9 +144,7 @@ def plot_networkg(corpus, dictionary):
 
     # graph viusalize
     pos = nx.spring_layout(G, seed=42)
-
-    edge_width = [data['weight'] * 5 for _, _, data in G.edges(data=True)]
-
+    edge_width = [data['weight'] * 50 for _, _, data in G.edges(data=True)]
     node_colors = ['lightblue' if G.nodes[node]['node_type'] == 'topic' else 'lightgray' for node in
                    G.nodes]  # 토픽 노드와 단어 노드에 다른 색상 적용
 
@@ -155,4 +153,3 @@ def plot_networkg(corpus, dictionary):
             font_size=8)
     plt.axis('off')
     return st.pyplot(plt, use_container_width=True)
-
