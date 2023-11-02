@@ -101,7 +101,8 @@ def main():
                     plot_decompose_timeseries(timeseries)
 
                 with tab2_col2_tab3:
-                    plot_prophet(timeseries)
+                    st.write("plot")
+                    # plot_prophet(timeseries)
 
 
 

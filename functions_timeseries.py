@@ -1,7 +1,7 @@
 
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import adfuller
-from prophet import Prophet
+# from prophet import Prophet
 from functions_text import *
 
 def call_example_timeseries():
@@ -2387,24 +2387,24 @@ def plot_time_series(timeseries):
     ax.legend()
     st.pyplot(fig, use_container_width=True)
 
-def plot_prophet(df):
-    data = df.reset_index().rename(columns={'date': 'ds', 'timeseries': 'y'})
-
-    model = Prophet()
-    model.fit(data)
-
-    future = model.make_future_dataframe(periods=365)  # Set the prediction period.
-    forecast = model.predict(future)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("### Overall Forecast")
-        st.markdown("- `Blue dots`: Actual observed data")
-        st.markdown("- `Black dashed line`: Trend showing the median of the overall forecast")
-        st.pyplot(model.plot(forecast), use_container_width=True)
-    with col2:
-        st.markdown("### Seasonality Plots")
-        st.markdown("- `Yearly seasonality`, `Weekly seasonality`, `Daily seasonality`")
-        st.pyplot(model.plot_components(forecast), use_container_width=True)
+# def plot_prophet(df):
+#     data = df.reset_index().rename(columns={'date': 'ds', 'timeseries': 'y'})
+#
+#     model = Prophet()
+#     model.fit(data)
+#
+#     future = model.make_future_dataframe(periods=365)  # Set the prediction period.
+#     forecast = model.predict(future)
+#     col1, col2 = st.columns(2)
+#     with col1:
+#         st.markdown("### Overall Forecast")
+#         st.markdown("- `Blue dots`: Actual observed data")
+#         st.markdown("- `Black dashed line`: Trend showing the median of the overall forecast")
+#         st.pyplot(model.plot(forecast), use_container_width=True)
+#     with col2:
+#         st.markdown("### Seasonality Plots")
+#         st.markdown("- `Yearly seasonality`, `Weekly seasonality`, `Daily seasonality`")
+#         st.pyplot(model.plot_components(forecast), use_container_width=True)
 
 
 
