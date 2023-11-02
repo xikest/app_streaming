@@ -19,7 +19,7 @@ def main():
     with st.sidebar:
         # Basic description
         st.subheader("Project Description")
-        st.write("This project supports basic text analysis.")
+        st.write("This project supports basic analysis.")
         st.markdown("---")
 
         with st.expander("Usage", expanded=True):
@@ -27,13 +27,11 @@ def main():
             st.write("- Upload a CSV or Excel file containing text data.")
 
             st.markdown("**2. Analysis Results**")
-            st.write("- Review data summaries, including the most frequent words.")
-            st.write("- Download word frequency analysis results as a CSV file.")
+            st.write("- Review data summaries")
 
             st.markdown("**3. Visualization**")
-            st.write("- Visualize top words and their frequencies in a bar chart.")
-            st.write("- Generate word frequency in graphic format using a word cloud.")
-            st.write("- Create a network graph of topics and related words using LDA.")
+            st.write("- Review graph")
+
 
         st.markdown("---")
         st.write(
