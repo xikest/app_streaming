@@ -20,18 +20,14 @@ def main():
         # Basic description
         st.subheader("Project Description")
         st.write("This project supports basic analysis.")
+        st.write("Supports Text Analysis and Time Series Analysis")
+
         st.markdown("---")
 
         with st.expander("Usage", expanded=True):
             st.markdown("**1. Data Preparation**")
-            st.write("- Upload a CSV or Excel file containing text data.")
-
             st.markdown("**2. Analysis Results**")
-            st.write("- Review data summaries")
-
             st.markdown("**3. Visualization**")
-            st.write("- Review graph")
-
 
         st.markdown("---")
         st.write(
