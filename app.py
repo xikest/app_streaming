@@ -45,10 +45,6 @@ def main():
 
     # Insert containers separated into tabs:
     tab1, tab2, tab3 = st.tabs(["Text Analysis", "Time Series Analysis", "Numeric Analysis"])
-    # tab1 = st.tabs(["Word Frequency"])
-    # tab1.write("EDA")
-    # tab2.write("plot2")
-    # tab3.write("plot3")
 
     with tab1:
         col1_tab1, col2_tab1 = st.columns([1, 2])
