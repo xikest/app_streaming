@@ -1,5 +1,6 @@
 
-from functions import *
+from functions_text import *
+from functions_timeseries import *
 def main():
     # basic setting
     st.set_page_config(
@@ -43,26 +44,22 @@ def main():
         st.markdown("---")
 
     # Insert containers separated into tabs:
-    tab1, tab2, tab3 = st.tabs(["Text Analysis", "Numeric Analysis", "Time Series Analysis"])
+    tab1, tab2, tab3 = st.tabs(["Text Analysis", "Time Series Analysis", "Numeric Analysis"])
     # tab1 = st.tabs(["Word Frequency"])
     # tab1.write("EDA")
     # tab2.write("plot2")
     # tab3.write("plot3")
 
     with tab1:
-        # function
         col1_tab1, col2_tab1 = st.columns([1, 2])
-
         with col1_tab1:
-            # Right seg
             st.subheader("1. Data Preparation")
-            call_example_comments()
-            data_uploaded = st.file_uploader("")
-            if data_uploaded is not None:
-                # st.subheader("Data Preview")
-                # extract data
+            df_example = call_example_comments()
+            download_df_as_csv(df_example, file_name="example_text_data", key="download_csv_text_example")
+            text_data_uploaded = st.file_uploader("Upload Text data", key="time_text_data")
+            if text_data_uploaded is not None:
                 try:
-                    comments = read_comments_from(data_uploaded, column_name="comments")
+                    comments = read_comments_from(text_data_uploaded, column_name="comments")
                     comments_as_string = ' '.join(comments.astype(str))
                     nouns = prepare_nouns(comments)
                     df_word_freq = prepare_word_freq(nouns)
@@ -74,10 +71,9 @@ def main():
                                                 "network_dictionary":dictionary}
                     st.subheader("2. Analysis results")
                     # download btn
-                    download_df_as_csv(df_word_freq)
+                    download_df_as_csv(df_word_freq, file_name="word_freq_analysis", key="download_csv_text_analysis")
                 except:
                     st.error('Please verify the file format', icon="🚨")
-
         with col2_tab1:
             if st.session_state["tab1"] is not None:
                 st.subheader("3. Visualization")
@@ -92,13 +88,36 @@ def main():
                     corpus = st.session_state["tab1"]["network_corpus"]
                     dictionary = st.session_state["tab1"]["network_dictionary"]
                     plot_networkg(corpus, dictionary)
-    # second tab: Correlation Plot
     with tab2:
-        st.subheader("In the conceptualization stage")
-    # third tab: LDA
+        col1_tab3, col2_tab3 = st.columns([1, 2])
+        with col1_tab3:
+            st.subheader("1. Data Preparation")
+            df_example = call_example_timeseries()
+            download_df_as_csv(df_example, "example_timeseries_data", key="download_csv_timeseries_example")
+            time_data_uploaded = st.file_uploader("Upload Time Series", key="time_series_uploader")
+            if time_data_uploaded is not None:
+                try:
+                    timeseries = read_timeseries_from(time_data_uploaded)
+                    st.session_state["tab3"] = {"timeseries": timeseries}
+                    plot_time_series(timeseries)
+                except:
+                    st.error('Please verify the file format', icon="🚨")
+        with col2_tab3:
+            if st.session_state["tab3"] is not None:
+                st.subheader("2. Visualization")
+                tab1_col2_tab3, tab2_col2_tab3  = st.tabs(["TimeSeries", "Prophet Plot"])
+                timeseries = st.session_state["tab3"]["timeseries"]
+                with tab1_col2_tab3:
+                    plot_decompose_timeseries(timeseries)
+
+                with tab2_col2_tab3:
+                    plot_prophet(timeseries)
+
+
+
+
     with tab3:
         st.subheader("In the conceptualization stage")
-
 
 if __name__ == "__main__":
     main()
