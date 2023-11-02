@@ -27,9 +27,9 @@ def call_example_comments() -> pd.DataFrame:
     # dataframe
     df = pd.DataFrame(comments)
     # instruction
-    st.markdown("**※ Upload CSV or Excel files only.**")
-    st.write("(1) 'comments' column is the subject of analysis. Use the column name 'comments.'")
-    st.write("(2) If no column name is specified, the first column will be the subject of analysis.")
+    st.markdown("**Excel Considerations**")
+    st.write("'comments' column is the subject of analysis. Use the column name 'comments.'")
+    st.write("If no column name is specified, the first column will be the subject of analysis.")
     return st.dataframe(df.head(2))
 
 

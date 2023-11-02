@@ -48,8 +48,7 @@ def main():
             # Right seg
             st.subheader("1. Data Preparation")
             call_example_comments()
-
-            data_uploaded = st.file_uploader("")
+            data_uploaded = st.file_uploader("※ Upload CSV, Excel, or Text files only.")
             if data_uploaded is not None:
                 # st.subheader("Data Preview")
                 # extract data
