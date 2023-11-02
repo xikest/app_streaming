@@ -1,43 +1,48 @@
-# Text Analysis and Visualization with Streamlit
+# 스트림릿을 활용한 텍스트 분석 및 시각화
 
-This project is designed to support basic text analysis and visualization using Streamlit. It provides a user-friendly interface for analyzing text data, performing word frequency analysis, creating word clouds, and visualizing network graphs of topics in the text.
+이 프로젝트는 스트림릿(Streamlit)을 활용하여 기본적인 텍스트 분석과 시각화를 지원하기 위해 설계되었습니다. 이를 통해 텍스트 데이터를 분석하고 단어 빈도 분석, 워드 클라우드 생성, 그리고 텍스트 내 주제의 네트워크 그래프 시각화를 수행할 수 있는 사용자 친화적인 인터페이스를 제공합니다.
 
-## Table of Contents
-- [Getting Started](#getting-started)
-- [Project Description](#project-description)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+## 목차
+- [시작하기](#시작하기)
+- [프로젝트 설명](#프로젝트-설명)
+- [기능](#기능)
+- [설치](#설치)
+- [사용법](#사용법)
+- [기여하기](#기여하기)
+- [라이선스](#라이선스)
+- [문의](#문의)
 
-## Getting Started
+## 시작하기
 
-Before using this project, ensure that you have Python and the required libraries installed. You can install the necessary libraries using the `requirements.txt` file. It's recommended to use a virtual environment for this project.
+이 프로젝트를 사용하기 전에 Python과 필요한 라이브러리가 설치되어 있는지 확인하십시오. 필요한 라이브러리는 `requirements.txt` 파일을 사용하여 설치할 수 있으며, 이 프로젝트에서는 가상 환경을 사용하는 것이 좋습니다.
 
 ```bash
 pip install -r requirements.txt
 ```
 
+## 프로젝트 설명
+이 프로젝트는 텍스트 데이터를 포함하는 CSV 또는 엑셀 파일을 업로드할 수 있습니다. 이 프로젝트는 텍스트 분석, 단어 빈도 분석, 워드 클라우드 생성 및 LDA (Latent Dirichlet Allocation)를 사용하여 텍스트 내 주제의 네트워크 그래프를 시각화하는 데 중점을 둡니다.
 
+## 기능
+1. 데이터 준비
+  - 텍스트 데이터를 포함하는 CSV 또는 엑셀 파일을 업로드합니다.
+  - 분석할 열을 선택합니다.
 
-#Project Description
-This project allows you to upload a CSV or Excel file containing text data. It focuses on text analysis, word frequency analysis, word cloud generation, and topic modeling through network graph visualization.
+2. 분석 결과 표시
+  - 데이터 요약과 가장 빈번한 단어를 포함한 데이터 요약을 확인합니다.
+  - 단어 빈도 분석 결과를 CSV 파일로 다운로드할 수 있습니다.
 
-Features
-Data Preparation
+3. 시각화
+  - 바 차트로 상위 단어와 해당 빈도를 시각화합니다.
+  - 단어 빈도를 그래픽 형식의 워드 클라우드로 생성합니다.
+  - LDA를 사용하여 주제 및 관련 단어의 네트워크 그래프를 생성합니다.
 
-Upload a CSV or Excel file containing text data.
-Select the column to be analyzed.
-Analysis Results
+## 설치
+1. 이 저장소를 로컬 컴퓨터로 클론합니다.
+``` bash
+git clone https://github.com/your_username/your_repository.git
+cd your_repository
+```
 
-View a summary of the data, including the most frequent words.
-Download the word frequency analysis results as a CSV file.
-Visualization
-
-Visualize the top words and their frequencies in a bar chart.
-Create a word cloud to visualize word frequencies in a graphical format.
-Generate a network graph of topics and associated words using Latent Dirichlet Allocation (LDA).
-Installation
-Clone the repository to your local machine:
+2. [시작하기](#시작하기) 섹션에서 언급한 대로 필요한 종속성을 설치합니다.
+3. Streamlit 앱을 실행합니다.
