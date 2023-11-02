@@ -8,8 +8,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-import gensim
-from gensim import corpora
 import re
 import nltk
 
