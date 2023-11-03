@@ -22,7 +22,6 @@ def main():
         # Basic description
         st.subheader("Project Description")
         st.write("This project supports basic analysis.")
-        st.write("Supports Text Analysis and Time Series Analysis")
 
         st.markdown("---")
 
