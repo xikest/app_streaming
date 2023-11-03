@@ -1,7 +1,7 @@
 
-from functions_text import *
-from functions_timeseries import *
-from function_multi_numeric import *
+from functions.text import *
+from functions.timeseries import *
+from functions.multi_numeric import *
 def main():
     # basic setting
     st.set_page_config(
