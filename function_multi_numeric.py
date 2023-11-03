@@ -32,64 +32,103 @@
 #
 #
 # #
-# import pandas as pd
-# import numpy as np
-# import plotly.express as px
-# import plotly.graph_objects as go
-# from sklearn.preprocessing import StandardScaler, LabelEncoder
-# from sklearn.decomposition import PCA
-# from sklearn.manifold import TSNE
-# from sklearn.model_selection import train_test_split
-# from sklearn.neural_network import MLPRegressor
-# from sklearn.tree import DecisionTreeRegressor
-# from sklearn.ensemble import RandomForestRegressor
-# from sklearn.metrics import mean_squared_error
-# import scipy.stats as stats
-# import missingno as msno
-# import seaborn as sns
-# import matplotlib.pyplot as plt
-# import streamlit as st
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+import scipy.stats as stats
+import missingno as msno
+import seaborn as sns
+import matplotlib.pyplot as plt
+import streamlit as st
+
 #
-#
-# def load_data():
-#     data = {
-#         'price': [100, 150, 200, 120, 180, 130, 210, 220, 250, 190],
-#         'customer': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'A', 'B', 'C'],
-#         'spec1': [1, 2, 3, 1, 2, 1, 3, 3, 2, 1],
-#         'spec2': ['Good', 'Excellent', 'Good', 'Excellent', 'Average', 'Good', 'Good', 'Excellent', 'Excellent',
-#                   'Average'],
-#         'spec3': ['North', 'South', 'North', 'West', 'South', 'North', 'West', 'North', 'South', 'West'],
-#         'spec4': [2020, 2021, 2022, 2020, 2021, 2020, 2022, 2022, 2021, 2020],
-#         'sales': [500, 550, 600, 480, 530, 520, 650, 690, 600, 550]
-#     }
-#     df = pd.DataFrame(data)
-#     return df
-#
-#
-# def preprocess_data(df):
-#     df.interpolate(method='linear', inplace=True)
-#     return df
-#
-#
-# def split_data(df):
-#     numerical_data = df[['price', 'spec1', 'spec4']]
-#     categorical_data = df[['customer', 'spec2', 'spec3']]
-#     return numerical_data, categorical_data
-#
-#
-# def correlation_analysis(numerical_data):
-#     correlation_matrix = numerical_data.corr()
-#     plt.figure(figsize=(10, 8))
-#     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
-#     plt.title('Correlation Map')
-#     st.pyplot(plt)
-#
-#
-# def missing_value_analysis(df):
-#     msno.matrix(df)
-#     st.title('Missing Values')
-#     st.pyplot()
-#
+def call_example_multi_numeric():
+    data = {
+        'target': [500, 550, 600, 480, 530, 520, 650, 690, 600, 550],
+        'price': [100, 150, 200, 120, 180, 130, 210, 220, 250, 190],
+        'customer': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'A', 'B', 'C'],
+        'spec1': [1, 2, 3, 1, 2, 1, 3, 3, 2, 1],
+        'spec2': ['Good', 'Excellent', 'Good', 'Excellent', 'Average', 'Good', 'Good', 'Excellent', 'Excellent',
+                  'Average'],
+        'spec3': ['North', 'South', 'North', 'West', 'South', 'North', 'West', 'North', 'South', 'West'],
+        'spec4': [2020, 2021, 2022, 2020, 2021, 2020, 2022, 2022, 2021, 2020],
+
+    }
+    df = pd.DataFrame(data)
+    return df
+def read_numeric_from(data_uploaded, column_target: str = "target") -> pd.DataFrame:
+    df = pd.DataFrame()
+    supported_formats = ['.csv', '.xlsx', '.txt']
+    if data_uploaded.name.endswith(tuple(supported_formats)):
+        if data_uploaded.name.endswith('.csv'):
+            df = pd.read_csv(data_uploaded)
+        elif data_uploaded.name.endswith('.xlsx'):
+            df = pd.read_excel(data_uploaded, engine='openpyxl')
+    else:
+        st.error("This file format is not supported. Please upload a CSV, Excel, or text file.")
+        st.stop()
+    try:
+        y = df.loc[:, column_target]
+        X = df.drop(column_target, axis=1)
+    except KeyError:
+        y = df.iloc[:, 0]
+        X = df.iloc[:, 1:]
+    # Check if y is not continuous numerical data
+    if not pd.api.types.is_numeric_dtype(y):
+        raise ValueError("The 'y' column is not continuous numerical data.")
+    df_combined = pd.concat([y, X], axis=1)
+    return df_combined
+def is_na(df):
+    return df.isna().sum().mean() > 0
+def preprocess_data(df):
+    st.markdown("#### Preprocess")
+    df.interpolate(method='linear', inplace=True)
+    return df
+
+def missing_value_analysis(df, title=""):
+    st.write(f'- {title}')
+    msno.matrix(df)
+    st.pyplot(plt, use_container_width=True)
+    return None
+
+
+
+def split_data(df):
+    y_column = df.columns[0]
+    numerical_columns = df.select_dtypes(include=['number']).columns    # 숫자 데이터를 포함하는 열 선택
+    categorical_columns = df.select_dtypes(exclude=['number']).columns   # 숫자 데이터를 포함하지 않는 열 선택
+    return y_column, numerical_columns, categorical_columns
+
+
+def one_hot_encode_categorical(df, categorical_columns):
+    df_encoded = pd.get_dummies(df, columns=categorical_columns, drop_first=True)
+    return df_encoded
+
+
+def plot_correlation(numerical_data, y) -> None:
+    correlation_matrix = numerical_data.corrwith(y, method="spearman")
+    correlation_matrix[y.name] = 1.0
+
+    correlation_matrix = correlation_matrix.sort_values(ascending=False)
+    fig, ax = plt.subplots(figsize=(10, 8))
+    mask = np.triu(np.ones_like(correlation_matrix), k=1)
+    cax = ax.matshow(correlation_matrix.values.reshape(1, -1), cmap='Blues')
+
+    plt.xticks(range(len(correlation_matrix)), correlation_matrix.index, rotation=45)
+    plt.yticks([])  # y-axis 레이블을 표시하지 않음
+    # plt.title('Correlation Map')
+    st.pyplot(fig, use_container_width=True)
+    return None
+
 #
 # def numerical_distribution_analysis(numerical_data):
 #     histogram_fig = px.histogram(df, x=numerical_data.columns)

@@ -1,6 +1,7 @@
 
 from functions_text import *
 from functions_timeseries import *
+from function_multi_numeric import *
 def main():
     # basic setting
     st.set_page_config(
@@ -38,7 +39,8 @@ def main():
         st.markdown("---")
 
     # Insert containers separated into tabs:
-    tab1, tab2, tab3, tab4 = st.tabs(["Text Analysis", "Time Series Analysis", "Multiple Numerical Analysis", "Classification Analysis"])
+    tab1, tab2, tab3 = st.tabs(["Text", "Time Series", "Multiple Numerical"])
+    # tab1, tab2, tab3, tab4 = st.tabs(["Text Analysis", "Time Series Analysis", "Multiple Numerical Analysis", "Classification Analysis"])
     # Text Analysis
     with tab1:
         col1_tab1, col2_tab1 = st.columns([1, 2])
@@ -80,8 +82,8 @@ def main():
                     plot_networkg(corpus, dictionary)
     # Time Series Analysis
     with tab2:
-        col1_tab3, col2_tab3 = st.columns([1, 2])
-        with col1_tab3:
+        col1_tab2, col2_tab2 = st.columns([1, 2])
+        with col1_tab2:
             st.subheader("1. Data Preparation")
             df_example = call_example_timeseries()
             download_df_as_csv(df_example, "sample_timeseries_data", key="download_timeseries_sample_csv", label="Sample")
@@ -94,7 +96,7 @@ def main():
                     plot_time_series(timeseries)
                 except:
                     st.error('Please verify the file format', icon="🚨")
-        with col2_tab3:
+        with col2_tab2:
             if st.session_state["tab2"] is not None:
                 st.subheader("2. Visualization")
                 tab1_col2_tab3, tab2_col2_tab3  = st.tabs(["Prophet Plot", "TimeSeries"])
@@ -103,7 +105,49 @@ def main():
                     plot_prophet(timeseries)
                 with tab2_col2_tab3: 
                     plot_timesseries_arima(timeseries)
-    # with tab3:
+    with tab3:
+        col1_tab3, col2_tab3 = st.columns([1, 2])
+        with col1_tab3:
+            st.subheader("1. Data Preparation")
+            df_example = call_example_multi_numeric()
+            download_df_as_csv(df_example, "sample_multi_numeric_data", key="download_multi_numeric_sample_csv", label="Sample")
+            multi_data_uploaded = st.file_uploader("Upload numeric data", key="multi_numeric_uploader")
+            if multi_data_uploaded is not None:
+                try:
+                    df_multi = read_numeric_from(multi_data_uploaded)
+
+                    if is_na(df_multi):
+                        col1_col1_tab3, col2_col1_tab3 = st.columns(2)
+                        with col1_col1_tab3:
+                            missing_value_analysis(df_multi, title="before imputation")
+                        with col2_col1_tab3:
+                            df_multi = preprocess_data(df_multi)
+                            missing_value_analysis(df_multi, title="after imputation")
+
+                    y_column, numerical_columns, categorical_columns =  split_data(df_multi)
+                    df_multi_encoded = one_hot_encode_categorical(df_multi, categorical_columns)
+                    st.markdown("#### correlation map")
+                    plot_correlation(df_multi_encoded.drop(y_column, axis=1), df_multi_encoded.loc[:, y_column])
+
+                    st.session_state["tab3"] = {"df_multi": df_multi,
+                                                "y_column" : y_column,
+                                                "numerical_columns" : numerical_columns,
+                                                "categorical_columns" : categorical_columns,
+                                                "df_multi_encoded": df_multi_encoded}
+                except:
+                    st.error('Please verify the file format', icon="🚨")
+        with col2_tab3:
+            if st.session_state["tab3"] is not None:
+                st.write("")
+                # st.subheader("2. Visualization")
+                # tab1_col2_tab3, tab2_col2_tab3  = st.tabs(["Plot", "1"])
+                # with tab1_col2_tab3:
+                #     st.write("")
+                # with tab2_col2_tab3:
+                #     st.write("")
+
+
+
     #     st.subheader("In the conceptualization stage")
     #     st.markdown("---")
     #
