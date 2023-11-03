@@ -99,15 +99,9 @@ def main():
                 tab1_col2_tab3, tab2_col2_tab3  = st.tabs(["TimeSeries", "Prophet Plot"])
                 timeseries = st.session_state["tab3"]["timeseries"]
                 with tab1_col2_tab3:
-                    plot_timesseries_arima(timeseries)
-
-
-                with tab2_col2_tab3:
                     plot_prophet(timeseries)
-
-
-
-
+                with tab2_col2_tab3: 
+                    plot_timesseries_arima(timeseries)
     with tab3:
         st.subheader("In the conceptualization stage")
         st.markdown("---")
