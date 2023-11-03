@@ -1,8 +1,11 @@
 
+import pandas as pd
+import streamlit as st
+import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import adfuller
-# from prophet import Prophet
-from functions_text import *
+from pmdarima.arima import auto_arima
+from prophet import Prophet
 
 def call_example_timeseries():
     # df = yf.download("AAPL", start="2017-01-01", end="2023-04-30")
@@ -2330,7 +2333,7 @@ def call_example_timeseries():
 
 
 
-def read_timeseries_from(data_uploaded, index_name="date") -> pd.Series:
+def read_timeseries_from(data_uploaded, index_name="date", data_column='timeseries') -> pd.Series:
     df = pd.DataFrame()
     supported_formats = ['.csv', '.xlsx']
 
@@ -2343,6 +2346,9 @@ def read_timeseries_from(data_uploaded, index_name="date") -> pd.Series:
         st.error("This file format is not supported. Please upload a CSV or Excel file.")
         st.stop()
 
+    df = df.loc[:,[index_name, data_column]]  #지정된 데이터 입력만 사용
+    df.loc[:, data_column] = df.loc[:, data_column].astype(float)  #숫자형으로 변경
+    # st.dataframe(df.head(2))
     df = df.set_index(index_name)
     df.index = pd.to_datetime(df.index)
     df = df.resample('D').last().ffill()
@@ -2350,18 +2356,7 @@ def read_timeseries_from(data_uploaded, index_name="date") -> pd.Series:
 
 
 
-def plot_decompose_timeseries(timeseries) -> None:
-    col1, col2 = st.columns(2)
-    with col1:
-        result = seasonal_decompose(timeseries, model='additive')
-        fig = result.plot()
-        ax = fig.get_axes()[0]  # 첫 번째 그래프의 x축 라벨 각도 변경
-        ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-        st.pyplot(fig, use_container_width=True)
-    with col2:
-        st.write("...")
 
-    return None
 
 # ADF test function
 def adf_test(data):
@@ -2375,8 +2370,26 @@ def adf_test(data):
         st.write("Result: The time series data is stationary")
     return adf_statistic, p_value
 
-
 # Plot time series data with ADF test results
+def download_summary_as_html(model_summary, file_name: str = 'summary', label: str = 'Summary ',  key: str = 'html_download_button') -> None:
+    summary_html = model_summary.as_html()
+    # with open(file_name + '.html', 'w') as html_file:
+    #     html_file.write(summary_html)
+    # with open(file_name + '.html', 'r') as read_html_file:
+    #     loaded_html = read_html_file.read()
+    # summary_html = model_summary.as_html()
+    # html_file = loaded_html
+
+    # Add a download button for the HTML file
+    st.download_button(
+        label,
+        summary_html,
+        f"{file_name}.html",
+        "text/html",
+        key=key
+    )
+    return None
+
 
 def plot_time_series(timeseries):
     fig, ax = plt.subplots(figsize=(12, 6))
@@ -2387,24 +2400,63 @@ def plot_time_series(timeseries):
     ax.legend()
     st.pyplot(fig, use_container_width=True)
 
-# def plot_prophet(df):
-#     data = df.reset_index().rename(columns={'date': 'ds', 'timeseries': 'y'})
-#
-#     model = Prophet()
-#     model.fit(data)
-#
-#     future = model.make_future_dataframe(periods=365)  # Set the prediction period.
-#     forecast = model.predict(future)
-#     col1, col2 = st.columns(2)
-#     with col1:
-#         st.markdown("### Overall Forecast")
-#         st.markdown("- `Blue dots`: Actual observed data")
-#         st.markdown("- `Black dashed line`: Trend showing the median of the overall forecast")
-#         st.pyplot(model.plot(forecast), use_container_width=True)
-#     with col2:
-#         st.markdown("### Seasonality Plots")
-#         st.markdown("- `Yearly seasonality`, `Weekly seasonality`, `Daily seasonality`")
-#         st.pyplot(model.plot_components(forecast), use_container_width=True)
+def plot_decompose_timeseries(timeseries) -> None:
+    col1, col2 = st.columns(2)
+    with col1:
+        result = seasonal_decompose(timeseries, model='additive')
+        fig = result.plot()
+        ax = fig.get_axes()[0]  # 첫 번째 그래프의 x축 라벨 각도 변경
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+        st.pyplot(fig, use_container_width=True)
+    with col2:
+        plot_autoarima(timeseries)
+
+    return None
+def plot_autoarima(timeseries):
+    # Create an Auto ARIMA model
+    model = auto_arima(timeseries, seasonal=True, m=12, stepwise=True, trace=True, suppress_warnings=True)
+    # Start the Streamlit web application
+    st.markdown('### Auto ARIMA Model Forecast')
+
+    # predict 12month
+    n_forecast = 12
+    # Generate model forecasts
+    forecast, conf_int = model.predict(n_periods=n_forecast, return_conf_int=True)
+    next_date = timeseries.index[-1] + pd.DateOffset(days=1)
+    next_periods = n_forecast
+    # Visualize the forecasts
+    fig = plt.figure(figsize=(12, 6))
+    plt.plot(timeseries.index, timeseries, label='Actual Data')
+    plt.plot(pd.date_range(start=next_date, periods=next_periods, freq='M'), forecast, label='Forecast', color='red')
+    plt.fill_between(pd.date_range(start=next_date, periods=next_periods, freq='M'), conf_int[:, 0], conf_int[:, 1],
+                     color='pink', alpha=0.3, label='Confidence Interval')
+    plt.legend()
+    plt.xlabel('Date')
+    plt.ylabel('Value')
+    plt.title('Auto ARIMA Model Forecast')
+    st.pyplot(fig, use_container_width=True)
+    # Output model summary information
+    download_summary_as_html(model.summary())
+    return None
+
+def plot_prophet(df):
+    data = df.reset_index().rename(columns={'date': 'ds', 'timeseries': 'y'})
+
+    model = Prophet()
+    model.fit(data)
+
+    future = model.make_future_dataframe(periods=365)  # Set the prediction period.
+    forecast = model.predict(future)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("### Overall Forecast")
+        st.markdown("- `Blue dots`: Actual observed data")
+        st.markdown("- `Black dashed line`: Trend showing the median of the overall forecast")
+        st.pyplot(model.plot(forecast), use_container_width=True)
+    with col2:
+        st.markdown("### Seasonality Plots")
+        st.markdown("- `Yearly seasonality`, `Weekly seasonality`, `Daily seasonality`")
+        st.pyplot(model.plot_components(forecast), use_container_width=True)
 
 
 

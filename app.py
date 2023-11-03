@@ -88,6 +88,7 @@ def main():
             if time_data_uploaded is not None:
                 try:
                     timeseries = read_timeseries_from(time_data_uploaded)
+
                     st.session_state["tab3"] = {"timeseries": timeseries}
                     plot_time_series(timeseries)
                 except:
@@ -100,9 +101,10 @@ def main():
                 with tab1_col2_tab3:
                     plot_decompose_timeseries(timeseries)
 
+
                 with tab2_col2_tab3:
                     st.write("plot")
-                    # plot_prophet(timeseries)
+                    plot_prophet(timeseries)
 
 
 
