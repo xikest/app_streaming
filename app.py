@@ -27,10 +27,11 @@ def main():
 
         with st.expander("Analysis", expanded=True):
             st.markdown("**1. Text**")
-            st.write("Text analysis, word frequency analysis, generating word clouds, and visualizing a network graph of topics within the text using Latent Dirichlet Allocation (LDA).")
+            st.write("`Word frequency analysis`, `Word clouds`, and visualizing a `network graph` of topics within the text using Latent Dirichlet Allocation (LDA).")
             st.markdown("**2. Time Series**")
-            st.write("Visualizing time series data using ADF (Augmented Dickey-Fuller test), Auto ARIMA, and Prophet.")
+            st.write("Visualizing time series data using `ADF` (Augmented Dickey-Fuller test), Auto `ARIMA`, and `Prophet`.")
             st.markdown("**3. Multiple Numerical**")
+            st.write("`Correlation` analysis is supported.")
             # st.markdown("**4. Classification Analysis**")
         st.markdown("---")
         st.write(
