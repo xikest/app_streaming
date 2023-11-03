@@ -2,6 +2,7 @@
 from functions.text import *
 from functions.timeseries import *
 from functions.multi_numeric import *
+
 def main():
     # basic setting
     st.set_page_config(
