@@ -45,7 +45,7 @@ def main():
         with col1_tab1:
             st.subheader("1. Data Preparation")
             df_example = call_example_comments()
-            download_df_as_csv(df_example, file_name="example_text_data", key="download_csv_text_example", label="Sample")
+            download_df_as_csv(df_example, file_name="sample_text_data", key="download_csv_text_example", label="Sample")
             text_data_uploaded = st.file_uploader("Upload Text data", key="time_text_data")
             if text_data_uploaded is not None:
                 try:
@@ -83,7 +83,7 @@ def main():
         with col1_tab3:
             st.subheader("1. Data Preparation")
             df_example = call_example_timeseries()
-            download_df_as_csv(df_example, "example_timeseries_data", key="download_csv_timeseries_example", label="Sample")
+            download_df_as_csv(df_example, "sample_timeseries_data", key="download_csv_timeseries_example", label="Sample")
             time_data_uploaded = st.file_uploader("Upload Time Series", key="time_series_uploader")
             if time_data_uploaded is not None:
                 try:
