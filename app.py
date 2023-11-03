@@ -96,7 +96,7 @@ def main():
         with col2_tab3:
             if st.session_state["tab3"] is not None:
                 st.subheader("2. Visualization")
-                tab1_col2_tab3, tab2_col2_tab3  = st.tabs(["TimeSeries", "Prophet Plot"])
+                tab1_col2_tab3, tab2_col2_tab3  = st.tabs(["Prophet Plot", "TimeSeries"])
                 timeseries = st.session_state["tab3"]["timeseries"]
                 with tab1_col2_tab3:
                     plot_prophet(timeseries)
