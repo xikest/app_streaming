@@ -2442,13 +2442,13 @@ def plot_prophet(df):
     forecast = model.predict(future)
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("### Seasonality Plots")
-        st.markdown("- `Yearly seasonality`, `Weekly seasonality`, `Daily seasonality`")
+        st.markdown("### Seasonality")
+        st.markdown("- `Daily`, `Weekly`, `Yearly`")
         st.pyplot(model.plot_components(forecast), use_container_width=True)
     with col2:
-        st.markdown("### Overall Forecast")
-        st.markdown("- `Blue dots`: Actual observed data")
-        st.markdown("- `Black dashed line`: Trend showing the median of the overall forecast")
+        st.markdown("### Forecast")
+        st.markdown("- `Blue dots`: Actual observed")
+        st.markdown("- `Black dashed line`: Trend showing the median of the forecast")
         st.pyplot(model.plot(forecast), use_container_width=True)
 
 
