@@ -26,7 +26,7 @@ def main():
 
         st.markdown("---")
 
-        with st.expander("Analysis", expanded=True):
+        with st.expander("Usage", expanded=True):
             st.markdown("**1. Text**")
             st.write("`Word frequency`, `Word clouds`, `network graph of topics`")
             st.markdown("**2. Time Series**")
