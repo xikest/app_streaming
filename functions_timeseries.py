@@ -1,11 +1,13 @@
 
 import pandas as pd
+import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import adfuller
 from pmdarima.arima import auto_arima
 from prophet import Prophet
+
 
 def call_example_timeseries():
     # df = yf.download("AAPL", start="2017-01-01", end="2023-04-30")
@@ -2331,8 +2333,6 @@ def call_example_timeseries():
     st.markdown("Excel (or CSV) Considerations: `timeseries` column is the subject of analysis.")
     return df
 
-
-
 def read_timeseries_from(data_uploaded, index_name="date", data_column='timeseries') -> pd.Series:
     df = pd.DataFrame()
     supported_formats = ['.csv', '.xlsx']
@@ -2354,31 +2354,20 @@ def read_timeseries_from(data_uploaded, index_name="date", data_column='timeseri
     df = df.resample('D').last().ffill()
     return df
 
-
-
-
-
 # ADF test function
-def adf_test(data):
+def call_adf_test(data):
     result = adfuller(data)
     adf_statistic, p_value, lags, nobs, critical_values, icbest = result
-
-    st.write(f'p-value: {p_value}')
+    p_value = np.round(p_value,3)
     if p_value < 0.05:
-        st.write("Result: The time series data is not stationary.")
+        st.write(f"The time series data is `non-stationary`. adf p-value: {p_value}")
     else:
-        st.write("Result: The time series data is stationary")
+        st.write(f"The time series data is `stationary`. adf p-value: {p_value}")
     return adf_statistic, p_value
 
 # Plot time series data with ADF test results
 def download_summary_as_html(model_summary, file_name: str = 'summary', label: str = 'Summary ',  key: str = 'html_download_button') -> None:
     summary_html = model_summary.as_html()
-    # with open(file_name + '.html', 'w') as html_file:
-    #     html_file.write(summary_html)
-    # with open(file_name + '.html', 'r') as read_html_file:
-    #     loaded_html = read_html_file.read()
-    # summary_html = model_summary.as_html()
-    # html_file = loaded_html
 
     # Add a download button for the HTML file
     st.download_button(
@@ -2390,7 +2379,6 @@ def download_summary_as_html(model_summary, file_name: str = 'summary', label: s
     )
     return None
 
-
 def plot_time_series(timeseries):
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.plot(timeseries, label='Time Series Data')
@@ -2400,24 +2388,12 @@ def plot_time_series(timeseries):
     ax.legend()
     st.pyplot(fig, use_container_width=True)
 
-def plot_decompose_timeseries(timeseries) -> None:
-    col1, col2 = st.columns(2)
-    with col1:
-        result = seasonal_decompose(timeseries, model='additive')
-        fig = result.plot()
-        ax = fig.get_axes()[0]  # 첫 번째 그래프의 x축 라벨 각도 변경
-        ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-        st.pyplot(fig, use_container_width=True)
-    with col2:
-        plot_autoarima(timeseries)
 
-    return None
 def plot_autoarima(timeseries):
     # Create an Auto ARIMA model
     model = auto_arima(timeseries, seasonal=True, m=12, stepwise=True, trace=True, suppress_warnings=True)
-    # Start the Streamlit web application
-    st.markdown('### Auto ARIMA Model Forecast')
-
+    # download summary
+    download_summary_as_html(model_summary=model.summary(), label="Click to download model summary")
     # predict 12month
     n_forecast = 12
     # Generate model forecasts
@@ -2436,15 +2412,32 @@ def plot_autoarima(timeseries):
     plt.title('Auto ARIMA Model Forecast')
     st.pyplot(fig, use_container_width=True)
     # Output model summary information
-    download_summary_as_html(model.summary())
+    return None
+
+def plot_decompose(timeseries):
+    call_adf_test(timeseries)
+    result = seasonal_decompose(timeseries, model='additive')
+    fig = result.plot()
+    ax = fig.get_axes()[0]  # 첫 번째 그래프의 x축 라벨 각도 변경
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+    st.pyplot(fig, use_container_width=True)
+    return None
+
+def plot_timesseries_arima(timeseries) -> None:
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("### Seasonal Decompose")
+        plot_decompose(timeseries)
+    with col2:
+        st.markdown('### Auto ARIMA Model Forecast')
+        plot_autoarima(timeseries)
+
     return None
 
 def plot_prophet(df):
     data = df.reset_index().rename(columns={'date': 'ds', 'timeseries': 'y'})
-
     model = Prophet()
     model.fit(data)
-
     future = model.make_future_dataframe(periods=365)  # Set the prediction period.
     forecast = model.predict(future)
     col1, col2 = st.columns(2)

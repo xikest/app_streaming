@@ -99,11 +99,10 @@ def main():
                 tab1_col2_tab3, tab2_col2_tab3  = st.tabs(["TimeSeries", "Prophet Plot"])
                 timeseries = st.session_state["tab3"]["timeseries"]
                 with tab1_col2_tab3:
-                    plot_decompose_timeseries(timeseries)
+                    plot_timesseries_arima(timeseries)
 
 
                 with tab2_col2_tab3:
-                    st.write("plot")
                     plot_prophet(timeseries)
 
 
