@@ -39,13 +39,13 @@ def main():
 
     # Insert containers separated into tabs:
     tab1, tab2, tab3, tab4 = st.tabs(["Text Analysis", "Time Series Analysis", "Multiple Numerical Analysis", "Classification Analysis"])
-
+    # Text Analysis
     with tab1:
         col1_tab1, col2_tab1 = st.columns([1, 2])
         with col1_tab1:
             st.subheader("1. Data Preparation")
             df_example = call_example_comments()
-            download_df_as_csv(df_example, file_name="sample_text_data", key="download_csv_text_example", label="Sample")
+            download_df_as_csv(df_example, file_name="sample_text_data", key="download_text_sample_csv", label="Sample")
             text_data_uploaded = st.file_uploader("Upload Text data", key="time_text_data")
             if text_data_uploaded is not None:
                 try:
@@ -78,63 +78,64 @@ def main():
                     corpus = st.session_state["tab1"]["network_corpus"]
                     dictionary = st.session_state["tab1"]["network_dictionary"]
                     plot_networkg(corpus, dictionary)
+    # Time Series Analysis
     with tab2:
         col1_tab3, col2_tab3 = st.columns([1, 2])
         with col1_tab3:
             st.subheader("1. Data Preparation")
             df_example = call_example_timeseries()
-            download_df_as_csv(df_example, "sample_timeseries_data", key="download_csv_timeseries_example", label="Sample")
+            download_df_as_csv(df_example, "sample_timeseries_data", key="download_timeseries_sample_csv", label="Sample")
             time_data_uploaded = st.file_uploader("Upload Time Series", key="time_series_uploader")
             if time_data_uploaded is not None:
                 try:
                     timeseries = read_timeseries_from(time_data_uploaded)
 
-                    st.session_state["tab3"] = {"timeseries": timeseries}
+                    st.session_state["tab2"] = {"timeseries": timeseries}
                     plot_time_series(timeseries)
                 except:
                     st.error('Please verify the file format', icon="🚨")
         with col2_tab3:
-            if st.session_state["tab3"] is not None:
+            if st.session_state["tab2"] is not None:
                 st.subheader("2. Visualization")
                 tab1_col2_tab3, tab2_col2_tab3  = st.tabs(["Prophet Plot", "TimeSeries"])
-                timeseries = st.session_state["tab3"]["timeseries"]
+                timeseries = st.session_state["tab2"]["timeseries"]
                 with tab1_col2_tab3:
                     plot_prophet(timeseries)
                 with tab2_col2_tab3: 
                     plot_timesseries_arima(timeseries)
-    with tab3:
-        st.subheader("In the conceptualization stage")
-        st.markdown("---")
-
-        # Step 1: Data Loading and Preprocessing
-        st.markdown("### Step 1: Data Loading and Preprocessing")
-        st.write("load_data")
-        st.write("preprocess_data")
-
-        # Step 2: Data Analysis
-        st.markdown("### Step 2: Data Analysis")
-        st.write("correlation_analysis")
-        st.write("missing_value_analysis")
-        st.write("numerical_distribution_analysis")
-        st.write("normality_analysis")
-        st.write("categorical_distribution_analysis")
-
-        # Step 3: Dimension Reduction
-        st.markdown("### Step 3: Dimension Reduction")
-        st.write("PCA (Principal Component Analysis)")
-        st.write("t-SNE (t-Distributed Stochastic Neighbor Embedding) - visualize")
-        st.write("KNN (K-Nearest Neighbors)")
-
-        # Step 4: MLP (Multi-Layer Perceptron) Model
-        st.markdown("### Step 4: MLP (Multi-Layer Perceptron) Model")
-        st.write("decision_tree")
-        st.write("random_forest")
-        st.write("mlp_model")
-        st.write("evaluate_model")
-        st.write("results_visualization")
-
-    with tab4:
-        st.subheader("In the conceptualization stage")
+    # with tab3:
+    #     st.subheader("In the conceptualization stage")
+    #     st.markdown("---")
+    #
+    #     # Step 1: Data Loading and Preprocessing
+    #     st.markdown("### Step 1: Data Loading and Preprocessing")
+    #     st.write("load_data")
+    #     st.write("preprocess_data")
+    #
+    #     # Step 2: Data Analysis
+    #     st.markdown("### Step 2: Data Analysis")
+    #     st.write("correlation_analysis")
+    #     st.write("missing_value_analysis")
+    #     st.write("numerical_distribution_analysis")
+    #     st.write("normality_analysis")
+    #     st.write("categorical_distribution_analysis")
+    #
+    #     # Step 3: Dimension Reduction
+    #     st.markdown("### Step 3: Dimension Reduction")
+    #     st.write("PCA (Principal Component Analysis)")
+    #     st.write("t-SNE (t-Distributed Stochastic Neighbor Embedding) - visualize")
+    #     st.write("KNN (K-Nearest Neighbors)")
+    #
+    #     # Step 4: MLP (Multi-Layer Perceptron) Model
+    #     st.markdown("### Step 4: MLP (Multi-Layer Perceptron) Model")
+    #     st.write("decision_tree")
+    #     st.write("random_forest")
+    #     st.write("mlp_model")
+    #     st.write("evaluate_model")
+    #     st.write("results_visualization")
+    #
+    # with tab4:
+    #     st.subheader("In the conceptualization stage")
 
 if __name__ == "__main__":
     main()
