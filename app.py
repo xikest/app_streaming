@@ -38,7 +38,7 @@ def main():
         st.markdown("---")
 
     # Insert containers separated into tabs:
-    tab1, tab2, tab3 = st.tabs(["Text Analysis", "Time Series Analysis", "Numeric Analysis"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Text Analysis", "Time Series Analysis", "Numeric Analysis", "classify Analysis"])
 
     with tab1:
         col1_tab1, col2_tab1 = st.columns([1, 2])
@@ -109,6 +109,9 @@ def main():
 
 
     with tab3:
+        st.subheader("In the conceptualization stage")
+        st.write("In the conceptualization stage")
+    with tab4:
         st.subheader("In the conceptualization stage")
 
 if __name__ == "__main__":
