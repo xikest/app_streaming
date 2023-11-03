@@ -25,11 +25,13 @@ def main():
 
         st.markdown("---")
 
-        with st.expander("Usage", expanded=True):
-            st.markdown("**1. Text Analysis**")
-            st.markdown("**2. Time Series Analysis**")
-            st.markdown("**3. Multiple Numerical Analysis**")
-            st.markdown("**4. Classification Analysis**")
+        with st.expander("Analysis", expanded=True):
+            st.markdown("**1. Text**")
+            st.write("Text analysis, word frequency analysis, generating word clouds, and visualizing a network graph of topics within the text using Latent Dirichlet Allocation (LDA).")
+            st.markdown("**2. Time Series**")
+            st.write("Visualizing time series data using ADF (Augmented Dickey-Fuller test), Auto ARIMA, and Prophet.")
+            st.markdown("**3. Multiple Numerical**")
+            # st.markdown("**4. Classification Analysis**")
         st.markdown("---")
         st.write(
             """     
