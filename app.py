@@ -25,10 +25,10 @@ def main():
         st.markdown("---")
 
         with st.expander("Usage", expanded=True):
-            st.markdown("**1. Data Preparation**")
-            st.markdown("**2. Analysis Results**")
-            st.markdown("**3. Visualization**")
-
+            st.markdown("**1. Text Analysis**")
+            st.markdown("**2. Time Series Analysis**")
+            st.markdown("**3. Multiple Numerical Analysis**")
+            st.markdown("**4. Classification Analysis**")
         st.markdown("---")
         st.write(
             """     
@@ -111,7 +111,7 @@ def main():
     with tab3:
         st.subheader("In the conceptualization stage")
         st.markdown("---")
-        
+
         # Step 1: Data Loading and Preprocessing
         st.markdown("### Step 1: Data Loading and Preprocessing")
         st.write("load_data")
