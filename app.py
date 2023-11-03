@@ -129,12 +129,15 @@ def main():
         st.markdown("### Step 3: Dimension Reduction")
         st.write("PCA (Principal Component Analysis)")
         st.write("t-SNE (t-Distributed Stochastic Neighbor Embedding) - visualize")
+        st.write("KNN (K-Nearest Neighbors)")
 
         # Step 4: MLP (Multi-Layer Perceptron) Model
         st.markdown("### Step 4: MLP (Multi-Layer Perceptron) Model")
+        st.write("decision_tree")
+        st.write("random_forest")
         st.write("mlp_model")
-        st.write("evaluate_mlp_model")
-        st.write("mlp_results_visualization")
+        st.write("evaluate_model")
+        st.write("results_visualization")
 
     with tab4:
         st.subheader("In the conceptualization stage")

@@ -1,37 +1,37 @@
-# # 단계 1: 데이터 로드 및 전처리
+# # # 단계 1: 데이터 로드 및 전처리
+# # #
+# # # load_data: 데이터를 로드하고 데이터프레임을 생성합니다.
+# # # preprocess_data: 결측값을 보간하는 데이터 전처리를 수행합니다.
+# # # 단계 2: 데이터 분석
+# # #
+# # # split_data: 수치형과 범주형 데이터로 데이터를 분리합니다.
+# # # correlation_analysis: 수치형 데이터 간의 상관 관계를 시각화하여 분석합니다.
+# # # missing_value_analysis: 결측값을 시각화하여 분석합니다.
+# # # numerical_distribution_analysis: 수치형 데이터의 분포를 히스토그램으로 시각화하여 분석합니다.
+# # # normality_analysis: 수치형 데이터의 정규성을 확인하기 위해 Q-Q 플롯을 시각화하여 분석합니다.
+# # # categorical_distribution_analysis: 범주형 데이터의 분포를 바 차트로 시각화하여 분석합니다.
+# # # 단계 3: PCA (주성분 분석)를 사용한 차원 축소
+# # #
+# # # pca_reduction: PCA를 사용하여 수치형 데이터의 차원을 축소하고 주성분을 추출합니다.
+# # # 단계 4: t-SNE (t-Distributed Stochastic Neighbor Embedding)를 사용한 차원 축소
+# # #
+# # # tsne_reduction: t-SNE를 사용하여 수치형 데이터의 차원을 축소하고 데이터를 시각화합니다.
+# # # 단계 5: MLP (다층 퍼셉트론) 모델 학습 및 평가
+# # #
+# # # mlp_model: MLP 회귀 모델을 생성하고 학습합니다.
+# # # evaluate_mlp_model: MLP 모델을 평가하고 MSE (평균 제곱 오차)를 계산합니다.
+# # # tsne_visualization: t-SNE로 축소된 데이터를 2차원 그래프로 시각화합니다.
+# # # mlp_results_visualization: MLP 모델의 결과를 시각화하고 실제 값과 예측 값의 관계를 나타내며, MSE를 표시합니다.
+# # # 단계 6: 실행 및 결과 확인
+# # #
+# # # main: 위의 단계를 실행하여 데이터 분석 및 모델링을 수행하고 결과를 확인합니다.
+# # # 각 단계에서 주요 작업과 시각화를 수행하여 데이터 분석 및 모델링 프로세스를 완료합니다.
 # #
-# # load_data: 데이터를 로드하고 데이터프레임을 생성합니다.
-# # preprocess_data: 결측값을 보간하는 데이터 전처리를 수행합니다.
-# # 단계 2: 데이터 분석
-# #
-# # split_data: 수치형과 범주형 데이터로 데이터를 분리합니다.
-# # correlation_analysis: 수치형 데이터 간의 상관 관계를 시각화하여 분석합니다.
-# # missing_value_analysis: 결측값을 시각화하여 분석합니다.
-# # numerical_distribution_analysis: 수치형 데이터의 분포를 히스토그램으로 시각화하여 분석합니다.
-# # normality_analysis: 수치형 데이터의 정규성을 확인하기 위해 Q-Q 플롯을 시각화하여 분석합니다.
-# # categorical_distribution_analysis: 범주형 데이터의 분포를 바 차트로 시각화하여 분석합니다.
-# # 단계 3: PCA (주성분 분석)를 사용한 차원 축소
-# #
-# # pca_reduction: PCA를 사용하여 수치형 데이터의 차원을 축소하고 주성분을 추출합니다.
-# # 단계 4: t-SNE (t-Distributed Stochastic Neighbor Embedding)를 사용한 차원 축소
-# #
-# # tsne_reduction: t-SNE를 사용하여 수치형 데이터의 차원을 축소하고 데이터를 시각화합니다.
-# # 단계 5: MLP (다층 퍼셉트론) 모델 학습 및 평가
-# #
-# # mlp_model: MLP 회귀 모델을 생성하고 학습합니다.
-# # evaluate_mlp_model: MLP 모델을 평가하고 MSE (평균 제곱 오차)를 계산합니다.
-# # tsne_visualization: t-SNE로 축소된 데이터를 2차원 그래프로 시각화합니다.
-# # mlp_results_visualization: MLP 모델의 결과를 시각화하고 실제 값과 예측 값의 관계를 나타내며, MSE를 표시합니다.
-# # 단계 6: 실행 및 결과 확인
-# #
-# # main: 위의 단계를 실행하여 데이터 분석 및 모델링을 수행하고 결과를 확인합니다.
-# # 각 단계에서 주요 작업과 시각화를 수행하여 데이터 분석 및 모델링 프로세스를 완료합니다.
+# # colomn1은 전처리 및 데이터 시각화
+# # column2은 예측 모델링 및 분류 모델
 #
-# colomn1은 전처리 및 데이터 시각화
-# column2은 예측 모델링 및 분류 모델
-
-
 #
+# #
 # import pandas as pd
 # import numpy as np
 # import plotly.express as px
@@ -41,26 +41,14 @@
 # from sklearn.manifold import TSNE
 # from sklearn.model_selection import train_test_split
 # from sklearn.neural_network import MLPRegressor
+# from sklearn.tree import DecisionTreeRegressor
+# from sklearn.ensemble import RandomForestRegressor
 # from sklearn.metrics import mean_squared_error
 # import scipy.stats as stats
 # import missingno as msno
 # import seaborn as sns
 # import matplotlib.pyplot as plt
-#
-# import pandas as pd
-# import numpy as np
-# import plotly.express as px
-# import plotly.graph_objects as go
-# from sklearn.preprocessing import StandardScaler, LabelEncoder
-# from sklearn.decomposition import PCA
-# from sklearn.manifold import TSNE
-# from sklearn.model_selection import train_test_split
-# from sklearn.neural_network import MLPRegressor
-# from sklearn.metrics import mean_squared_error
-# import scipy.stats as stats
-# import missingno as msno
-# import seaborn as sns
-# import matplotlib.pyplot as plt
+# import streamlit as st
 #
 #
 # def load_data():
@@ -79,7 +67,6 @@
 #
 #
 # def preprocess_data(df):
-#     # 결측값 보간
 #     df.interpolate(method='linear', inplace=True)
 #     return df
 #
@@ -95,13 +82,13 @@
 #     plt.figure(figsize=(10, 8))
 #     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
 #     plt.title('Correlation Map')
-#     plt.show()
+#     st.pyplot(plt)
 #
 #
 # def missing_value_analysis(df):
 #     msno.matrix(df)
-#     plt.title('Missing Values')
-#     plt.show()
+#     st.title('Missing Values')
+#     st.pyplot()
 #
 #
 # def numerical_distribution_analysis(numerical_data):
@@ -111,7 +98,7 @@
 #         xaxis_title="Feature Value",
 #         yaxis_title="Frequency"
 #     )
-#     histogram_fig.show()
+#     st.plotly_chart(histogram_fig)
 #
 #
 # def normality_analysis(numerical_data):
@@ -124,7 +111,7 @@
 #         xaxis_title="Theoretical Quantiles",
 #         yaxis_title="Sample Quantiles"
 #     )
-#     qq_plot.show()
+#     st.plotly_chart(qq_plot)
 #
 #
 # def categorical_distribution_analysis(categorical_data):
@@ -135,7 +122,7 @@
 #             xaxis_title=column,
 #             yaxis_title="Count"
 #         )
-#         categorical_fig.show()
+#         st.plotly_chart(categorical_fig)
 #
 #
 # def pca_reduction(numerical_data):
@@ -156,14 +143,39 @@
 #     return tsne_df
 #
 #
+# def knn_reduction(numerical_data, k):
+#     scaler = StandardScaler()
+#     scaled_data = scaler.fit_transform(numerical_data)
+#     knn = NearestNeighbors(n_neighbors=k)
+#     knn.fit(scaled_data)
+#     distances, indices = knn.kneighbors(scaled_data)
+#     st.write("K-Nearest Neighbors (KNN) for Dimension Reduction:")
+#     st.write("Distances to Nearest Neighbors:")
+#     st.write(distances)
+#     st.write("Indices of Nearest Neighbors:")
+#     st.write(indices)
+#
+#
 # def mlp_model(X_train, y_train):
 #     mlp_regressor = MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=1000, random_state=42)
 #     mlp_regressor.fit(X_train, y_train)
 #     return mlp_regressor
 #
 #
-# def evaluate_mlp_model(mlp_regressor, X_test, y_test):
-#     y_pred = mlp_regressor.predict(X_test)
+# def decision_tree_model(X_train, y_train):
+#     decision_tree = DecisionTreeRegressor(random_state=42)
+#     decision_tree.fit(X_train, y_train)
+#     return decision_tree
+#
+#
+# def random_forest_model(X_train, y_train):
+#     random_forest = RandomForestRegressor(random_state=42)
+#     random_forest.fit(X_train, y_train)
+#     return random_forest
+#
+#
+# def evaluate_model(model, X_test, y_test):
+#     y_pred = model.predict(X_test)
 #     mse = mean_squared_error(y_test, y_pred)
 #     return mse, y_pred
 #
@@ -176,7 +188,7 @@
 #         xaxis_title="t-SNE Dimension 1",
 #         yaxis_title="t-SNE Dimension 2"
 #     )
-#     fig.show()
+#     st.plotly_chart(fig)
 #
 #
 # def mlp_results_visualization(y_test, y_pred):
@@ -197,16 +209,16 @@
 #         line=dict(color='red', dash='dash'),
 #     )
 #
-#     scatter_fig.show()
+#     st.plotly_chart(scatter_fig)
 #
 #
 # def main():
 #     df = load_data()
 #
-#     print("Step 1: Data Preprocessing")
+#     st.write("Step 1: Data Loading and Preprocessing")
 #     df = preprocess_data(df)
 #
-#     print("Step 2: Data Analysis")
+#     st.write("Step 2: Data Analysis")
 #     numerical_data, categorical_data = split_data(df)
 #     correlation_analysis(numerical_data)
 #     missing_value_analysis(df)
@@ -214,12 +226,42 @@
 #     normality_analysis(numerical_data)
 #     categorical_distribution_analysis(categorical_data)
 #
-#     print("Step 3: Dimensionality Reduction (PCA)")
+#     st.write("Step 3: Dimension Reduction (PCA)")
 #     pca_df = pca_reduction(numerical_data)
 #
-#     print("Step 4: Dimensionality Reduction (t-SNE)")
+#     st.write("Step 4: Dimension Reduction (t-SNE)")
 #     tsne_df = tsne_reduction(numerical_data)
 #     tsne_visualization(tsne_df)
 #
-#     print("Step 5: MLP Modeling (PCA)")
-#     X_train, X_test, y_train, y_test = train_test_split(pca_df, df['sales'], test_size=0.2
+#     st.write("Step 5: Dimension Reduction (K-Nearest Neighbors)")
+#     k = 3  # Define the number of neighbors for KNN
+#     knn_reduction(numerical_data, k)
+#
+#     st.write("Step 6: MLP Modeling")
+#     X_train, X_test, y_train, y_test = train_test_split(pca_df, df['sales'], test_size=0.2, random_state=42)
+#     mlp_regressor = mlp_model(X_train, y_train)
+#     mlp_mse, mlp_y_pred = evaluate_model(mlp_regressor, X_test, y_test)
+#     st.write("MLP Model MSE:", mlp_mse)
+#
+#     st.write("MLP Model Results Visualization:")
+#     mlp_results_visualization(y_test, mlp_y_pred)
+#
+#     st.write("Step 7: Predictive Modeling with Decision Tree and Random Forest")
+#     decision_tree = decision_tree_model(X_train, y_train)
+#     random_forest = random_forest_model(X_train, y_train)
+#
+#     decision_tree_mse, decision_tree_y_pred = evaluate_model(decision_tree, X_test, y_test)
+#     random_forest_mse, random_forest_y_pred = evaluate_model(random_forest, X_test, y_test)
+#
+#     st.write("Decision Tree Model MSE:", decision_tree_mse)
+#     st.write("Random Forest Model MSE:", random_forest_mse)
+#
+#     st.write("Decision Tree Model Results Visualization:")
+#     mlp_results_visualization(y_test, decision_tree_y_pred)
+#
+#     st.write("Random Forest Model Results Visualization:")
+#     mlp_results_visualization(y_test, random_forest_y_pred)
+#
+#
+# if __name__ == '__main__':
+#     main()
