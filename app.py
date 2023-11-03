@@ -38,7 +38,7 @@ def main():
         st.markdown("---")
 
     # Insert containers separated into tabs:
-    tab1, tab2, tab3, tab4 = st.tabs(["Text Analysis", "Time Series Analysis", "Numeric Analysis", "classify Analysis"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Text Analysis", "Time Series Analysis", "Multiple Numerical Analysis", "Classification Analysis"])
 
     with tab1:
         col1_tab1, col2_tab1 = st.columns([1, 2])
@@ -109,8 +109,30 @@ def main():
 
 
     with tab3:
-        st.subheader("In the conceptualization stage")
-        st.write("In the conceptualization stage")
+        # Step 1: Data Loading and Preprocessing
+        st.markdown("### Step 1: Data Loading and Preprocessing")
+        st.write("load_data")
+        st.write("preprocess_data")
+
+        # Step 2: Data Analysis
+        st.markdown("### Step 2: Data Analysis")
+        st.write("correlation_analysis")
+        st.write("missing_value_analysis")
+        st.write("numerical_distribution_analysis")
+        st.write("normality_analysis")
+        st.write("categorical_distribution_analysis")
+
+        # Step 3: Dimension Reduction
+        st.markdown("### Step 3: Dimension Reduction")
+        st.write("PCA (Principal Component Analysis)")
+        st.write("t-SNE (t-Distributed Stochastic Neighbor Embedding) - visualize")
+
+        # Step 4: MLP (Multi-Layer Perceptron) Model
+        st.markdown("### Step 4: MLP (Multi-Layer Perceptron) Model")
+        st.write("mlp_model")
+        st.write("evaluate_mlp_model")
+        st.write("mlp_results_visualization")
+
     with tab4:
         st.subheader("In the conceptualization stage")
 
