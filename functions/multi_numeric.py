@@ -262,15 +262,15 @@ def select_best_model(X, y):
     progress_bar = st.progress(0)
 
     for i, (model_name, model_instance) in enumerate(models_dict.items()):
+        # 진행 상황을 업데이트하고 시각화
+        progress = (i + 1) / len(models_dict)
+        progress_bar.progress(progress)
+
         model = model_instance
         model.fit(X_train, y_train)
         predictions = model.predict(X_test)
         mse = mean_squared_error(y_test, predictions)
         mse_scores.append((model_name, mse))
-
-        # 진행 상황을 업데이트하고 시각화
-        progress = (i + 1) / len(models_dict)
-        progress_bar.progress(progress)
 
     best_model_name, best_mse = min(mse_scores, key=lambda x: x[1])
     best_model = models_dict.get(best_model_name)
