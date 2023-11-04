@@ -231,6 +231,7 @@ def make_random_forest(X_train, y_train):
     random_forest.fit(X_train, y_train)
     return random_forest
 
+
 def select_best_model(X, y):
     """
     주어진 모델 중에서 가장 낮은 MSE를 가진 모델을 선택
@@ -238,7 +239,7 @@ def select_best_model(X, y):
         ("MLP", mlp_model),  # "MLP"는 모델 이름, mlp_model은 모델 인스턴스
         ("Decision Tree", decision_tree_model),
         ("Random Forest", random_forest_model)
-        ]
+    ]
     Parameters:
     - X: 입력 데이터
     - y: 목표 변수
@@ -256,15 +257,27 @@ def select_best_model(X, y):
         "Random Forest": make_random_forest(X_train, y_train)
     }
     mse_scores = []
-    for model_name, model_instance in models_dict.items():
+
+    # Streamlit의 progress bar를 생성
+    progress_bar = st.progress(0)
+
+    for i, (model_name, model_instance) in enumerate(models_dict.items()):
         model = model_instance
         model.fit(X_train, y_train)
         predictions = model.predict(X_test)
         mse = mean_squared_error(y_test, predictions)
         mse_scores.append((model_name, mse))
 
+        # 진행 상황을 업데이트하고 시각화
+        progress = (i + 1) / len(models_dict)
+        progress_bar.progress(progress)
+
     best_model_name, best_mse = min(mse_scores, key=lambda x: x[1])
     best_model = models_dict.get(best_model_name)
+
+    # 진행 상황을 100%로 설정하여 완료
+    progress_bar.progress(1.0)
+
     return best_model_name, best_model, best_mse
 
 def visualize_best_model_performance(X, y, best_model_name, best_model_instance):
