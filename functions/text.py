@@ -91,6 +91,7 @@ def prepare_word_freq(nouns) -> pd.DataFrame:
 
 
 def download_df_as_csv(df: pd.DataFrame, file_name: str, key:str, preview=True, label:str="Download") -> None:
+
     csv_file = df.to_csv(index=False).encode('utf-8')
     st.download_button(
         label,
@@ -99,8 +100,8 @@ def download_df_as_csv(df: pd.DataFrame, file_name: str, key:str, preview=True, 
         "text/csv",
         key=key
     )
-    if preview:
-        st.dataframe(df.head(2))
+    # if preview:
+    #     st.dataframe(df.head(3))
     return None
 
 def plot_freq(df_word_freq, num_dis: int = 10):

@@ -45,10 +45,13 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 import scipy.stats as stats
+from scipy.stats import chi2_contingency
 import missingno as msno
 import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
+import statsmodels.api as sm
+
 
 #
 def call_example_multi_numeric():
@@ -91,218 +94,215 @@ def read_numeric_from(data_uploaded, column_target: str = "target") -> pd.DataFr
     return df_combined
 def is_na(df):
     return df.isna().sum().mean() > 0
-def preprocess_data(df):
-    st.markdown("#### Preprocess")
-    df.interpolate(method='linear', inplace=True)
-    return df
-
-def missing_value_analysis(df, title=""):
-    st.write(f'- {title}')
-    msno.matrix(df)
-    st.pyplot(plt, use_container_width=True)
-    return None
 
 
-
-def split_data(df):
-    y_column = df.columns[0]
-    numerical_columns = df.select_dtypes(include=['number']).columns    # 숫자 데이터를 포함하는 열 선택
-    categorical_columns = df.select_dtypes(exclude=['number']).columns   # 숫자 데이터를 포함하지 않는 열 선택
-    return y_column, numerical_columns, categorical_columns
-
-
-def one_hot_encode_categorical(df, categorical_columns):
-    df_encoded = pd.get_dummies(df, columns=categorical_columns, drop_first=True)
-    return df_encoded
-
-
-def plot_correlation(numerical_data, y) -> None:
-    correlation_matrix = numerical_data.corrwith(y, method="spearman")
-    correlation_matrix[y.name] = 1.0
-
-    correlation_matrix = correlation_matrix.sort_values(ascending=False)
-    fig, ax = plt.subplots(figsize=(10, 8))
-    mask = np.triu(np.ones_like(correlation_matrix), k=1)
-    cax = ax.matshow(correlation_matrix.values.reshape(1, -1), cmap='Blues')
-
-    plt.xticks(range(len(correlation_matrix)), correlation_matrix.index, rotation=45)
-    plt.yticks([])  # y-axis 레이블을 표시하지 않음
-    # plt.title('Correlation Map')
+def plot_missing_value(df):
+    fig, ax = plt.subplots(figsize=(10, 4))  # 그래프 크기 지정
+    msno.matrix(df, ax=ax)
     st.pyplot(fig, use_container_width=True)
     return None
 
-#
-# def numerical_distribution_analysis(numerical_data):
-#     histogram_fig = px.histogram(df, x=numerical_data.columns)
-#     histogram_fig.update_layout(
-#         title="Distribution of Numerical Features",
-#         xaxis_title="Feature Value",
-#         yaxis_title="Frequency"
-#     )
-#     st.plotly_chart(histogram_fig)
-#
-#
-# def normality_analysis(numerical_data):
-#     qq_plot = go.Figure()
-#     for column in numerical_data.columns:
-#         qq_data = numerical_data[column].dropna()
-#         qq_plot.add_trace(go.Figure(data=stats.probplot(qq_data, plot=None)))
-#     qq_plot.update_layout(
-#         title="Q-Q Plot for Normality Check (Numerical Features)",
-#         xaxis_title="Theoretical Quantiles",
-#         yaxis_title="Sample Quantiles"
-#     )
-#     st.plotly_chart(qq_plot)
-#
-#
-# def categorical_distribution_analysis(categorical_data):
-#     for column in categorical_data.columns:
-#         categorical_fig = px.bar(categorical_data, x=column, labels={column: 'Count'})
-#         categorical_fig.update_layout(
-#             title=f'Categorical Data Distribution ({column})',
-#             xaxis_title=column,
-#             yaxis_title="Count"
-#         )
-#         st.plotly_chart(categorical_fig)
-#
-#
-# def pca_reduction(numerical_data):
-#     scaler = StandardScaler()
-#     scaled_data = scaler.fit_transform(numerical_data)
-#     pca = PCA(n_components=2)
-#     principal_components_pca = pca.fit_transform(scaled_data)
-#     pca_df = pd.DataFrame(data=principal_components_pca, columns=['PC1', 'PC2'])
-#     return pca_df
-#
-#
-# def tsne_reduction(numerical_data):
-#     scaler = StandardScaler()
-#     scaled_data = scaler.fit_transform(numerical_data)
-#     tsne = TSNE(n_components=2, random_state=42)
-#     principal_components_tsne = tsne.fit_transform(scaled_data)
-#     tsne_df = pd.DataFrame(data=principal_components_tsne, columns=['t-SNE1', 't-SNE2'])
-#     return tsne_df
-#
-#
-# def knn_reduction(numerical_data, k):
-#     scaler = StandardScaler()
-#     scaled_data = scaler.fit_transform(numerical_data)
-#     knn = NearestNeighbors(n_neighbors=k)
-#     knn.fit(scaled_data)
-#     distances, indices = knn.kneighbors(scaled_data)
-#     st.write("K-Nearest Neighbors (KNN) for Dimension Reduction:")
-#     st.write("Distances to Nearest Neighbors:")
-#     st.write(distances)
-#     st.write("Indices of Nearest Neighbors:")
-#     st.write(indices)
-#
-#
-# def mlp_model(X_train, y_train):
-#     mlp_regressor = MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=1000, random_state=42)
-#     mlp_regressor.fit(X_train, y_train)
-#     return mlp_regressor
-#
-#
-# def decision_tree_model(X_train, y_train):
-#     decision_tree = DecisionTreeRegressor(random_state=42)
-#     decision_tree.fit(X_train, y_train)
-#     return decision_tree
-#
-#
-# def random_forest_model(X_train, y_train):
-#     random_forest = RandomForestRegressor(random_state=42)
-#     random_forest.fit(X_train, y_train)
-#     return random_forest
-#
-#
-# def evaluate_model(model, X_test, y_test):
-#     y_pred = model.predict(X_test)
-#     mse = mean_squared_error(y_test, y_pred)
-#     return mse, y_pred
-#
-#
-# def tsne_visualization(tsne_df):
-#     fig = px.scatter(tsne_df, x='t-SNE1', y='t-SNE2',
-#                      labels={'t-SNE1': 't-SNE Dimension 1', 't-SNE2': 't-SNE Dimension 2'})
-#     fig.update_layout(
-#         title="t-SNE Visualization",
-#         xaxis_title="t-SNE Dimension 1",
-#         yaxis_title="t-SNE Dimension 2"
-#     )
-#     st.plotly_chart(fig)
-#
-#
-# def mlp_results_visualization(y_test, y_pred):
-#     scatter_fig = px.scatter(x=y_test, y=y_pred, labels={'x': 'Actual', 'y': 'Predicted'})
-#     scatter_fig.update_traces(marker=dict(size=5))
-#     scatter_fig.update_layout(
-#         title="Actual vs. Predicted Values",
-#         xaxis_title="Actual",
-#         yaxis_title="Predicted"
-#     )
-#
-#     scatter_fig.add_shape(
-#         type='line',
-#         x0=y_test.min(),
-#         y0=y_test.min(),
-#         x1=y_test.max(),
-#         y1=y_test.max(),
-#         line=dict(color='red', dash='dash'),
-#     )
-#
-#     st.plotly_chart(scatter_fig)
-#
-#
-# def main():
-#     df = load_data()
-#
-#     st.write("Step 1: Data Loading and Preprocessing")
-#     df = preprocess_data(df)
-#
-#     st.write("Step 2: Data Analysis")
-#     numerical_data, categorical_data = split_data(df)
-#     correlation_analysis(numerical_data)
-#     missing_value_analysis(df)
-#     numerical_distribution_analysis(numerical_data)
-#     normality_analysis(numerical_data)
-#     categorical_distribution_analysis(categorical_data)
-#
-#     st.write("Step 3: Dimension Reduction (PCA)")
-#     pca_df = pca_reduction(numerical_data)
-#
-#     st.write("Step 4: Dimension Reduction (t-SNE)")
-#     tsne_df = tsne_reduction(numerical_data)
-#     tsne_visualization(tsne_df)
-#
-#     st.write("Step 5: Dimension Reduction (K-Nearest Neighbors)")
-#     k = 3  # Define the number of neighbors for KNN
-#     knn_reduction(numerical_data, k)
-#
-#     st.write("Step 6: MLP Modeling")
-#     X_train, X_test, y_train, y_test = train_test_split(pca_df, df['sales'], test_size=0.2, random_state=42)
-#     mlp_regressor = mlp_model(X_train, y_train)
-#     mlp_mse, mlp_y_pred = evaluate_model(mlp_regressor, X_test, y_test)
-#     st.write("MLP Model MSE:", mlp_mse)
-#
-#     st.write("MLP Model Results Visualization:")
-#     mlp_results_visualization(y_test, mlp_y_pred)
-#
-#     st.write("Step 7: Predictive Modeling with Decision Tree and Random Forest")
-#     decision_tree = decision_tree_model(X_train, y_train)
-#     random_forest = random_forest_model(X_train, y_train)
-#
-#     decision_tree_mse, decision_tree_y_pred = evaluate_model(decision_tree, X_test, y_test)
-#     random_forest_mse, random_forest_y_pred = evaluate_model(random_forest, X_test, y_test)
-#
-#     st.write("Decision Tree Model MSE:", decision_tree_mse)
-#     st.write("Random Forest Model MSE:", random_forest_mse)
-#
-#     st.write("Decision Tree Model Results Visualization:")
-#     mlp_results_visualization(y_test, decision_tree_y_pred)
-#
-#     st.write("Random Forest Model Results Visualization:")
-#     mlp_results_visualization(y_test, random_forest_y_pred)
-#
-#
-# if __name__ == '__main__':
-#     main()
+def split_data_columns(df):
+    numerical_columns = df.select_dtypes(include=['number']).columns    # 숫자 데이터를 포함하는 열 선택
+    categorical_columns = df.select_dtypes(exclude=['number']).columns   # 숫자 데이터를 포함하지 않는 열 선택
+    return numerical_columns, categorical_columns
+
+
+def plot_distribution(numerical_data):
+    scaler = StandardScaler()
+    standardized_data = scaler.fit_transform(numerical_data)
+    sns.set_style("white")
+    fig = plt.figure(figsize=(10, 4))
+    for i in range(standardized_data.shape[1]):
+        sns.distplot(standardized_data[:, i], kde=True, label=numerical_data.columns[i])
+    plt.xlabel("Feature Value")
+    plt.ylabel("Density")
+    plt.title("Distribution of Numerical Features")
+    plt.legend()
+    sns.despine()
+    st.pyplot(fig, use_container_width=True)
+
+
+def plot_normality(numerical_data):
+    num_cols = numerical_data.shape[1]
+
+    fig, ax = plt.subplots(1, 1, figsize=(10, 4))
+    fig.suptitle("Q-Q Plot for Normality Check (Numerical Features)")
+
+    scaler = StandardScaler()  # StandardScaler 객체 생성
+
+    for i, column in enumerate(numerical_data.columns):
+        qq_data = numerical_data[column].dropna().values.reshape(-1, 1)  # 1차원 데이터를 2차원으로 변환
+        qq_data = scaler.fit_transform(qq_data)  # 데이터 스케일링 (Z-스코어 표준화)
+        qq_data = qq_data.flatten()  # 2차원 데이터를 다시 1차원으로 변환
+        sm.qqplot(qq_data, line='s', ax=ax, label=column)
+        ax.set_title('Q-Q Plot for Numerical Features')
+    ax.legend(loc='upper left')
+    st.pyplot(fig, use_container_width=True)
+
+
+def plot_correlation(numerical_data) -> None:
+    correlation_matrix = numerical_data.corr(method="spearman")
+
+    # Create a mask to hide the upper triangle
+    mask = np.triu(np.ones_like(correlation_matrix), k=1)
+
+    fig, ax = plt.subplots(figsize=(10, 4))
+
+    sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap='Blues', cbar=False,
+                xticklabels=correlation_matrix.columns, yticklabels=correlation_matrix.columns, mask=mask)
+
+    plt.xticks(rotation=45)
+    plt.title('Correlation Map')
+
+    # 그래프에서 그리드를 제거
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+    st.pyplot(fig, use_container_width=True)
+    return None
+
+
+def plot_stacked_bar(df):
+    category_counts = df.apply(lambda x: x.value_counts()).T.fillna(0)
+    data = []
+    for col in category_counts.columns:
+        data.append(go.Bar(x=category_counts.index, y=category_counts[col], name=col))
+    layout = go.Layout(
+        barmode='stack',
+        title='Stacked category',
+        xaxis=dict(title='Category'),
+        yaxis=dict(title='Cumulative Count'),
+        legend=dict(title='Subcategory'),
+    )
+    fig = go.Figure(data=data, layout=layout)
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def pca_reduction(numerical_data, variance_threshold=0.8, show=True):
+    scaler = StandardScaler()
+    scaled_data = scaler.fit_transform(numerical_data)
+    pca = PCA(n_components=2)  # PC1과 PC2만 유지
+    principal_components_pca = pca.fit_transform(scaled_data)
+    pca_df = pd.DataFrame(data=principal_components_pca, columns=['PC1', 'PC2'])
+
+    if show:
+    # PCA 결과 시각화
+        plt.figure(figsize=(10, 4))
+        plt.scatter(pca_df['PC1'], pca_df['PC2'])
+        plt.xlabel('Principal Component 1')
+        plt.ylabel('Principal Component 2')
+        plt.title('PCA Plot')
+
+        # Streamlit에 그래프 출력
+        st.pyplot(plt)
+
+    return pca_df
+
+
+def preprocess_data(df, show=True):
+    # st.markdown("#### Preprocess")
+    numerical_columns, categorical_columns = split_data_columns(df)
+    df.interpolate(method='linear', inplace=True)
+    if not numerical_columns.empty:
+        pca_df_num = pca_reduction(df[numerical_columns], show=show)
+        preprocessed_df = pd.concat([df[categorical_columns], pca_df_num], axis=1)
+    else:
+        preprocessed_df = df
+    if not categorical_columns.empty:
+        preprocessed_df = pd.get_dummies(preprocessed_df, columns=categorical_columns, drop_first=True)
+    return preprocessed_df
+
+
+def make_mlp(X_train, y_train):
+    mlp_regressor = MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=1000, random_state=42)
+    mlp_regressor.fit(X_train, y_train)
+    return mlp_regressor
+
+
+def make_decision_tree(X_train, y_train):
+    decision_tree = DecisionTreeRegressor(random_state=42)
+    decision_tree.fit(X_train, y_train)
+    return decision_tree
+
+
+def make_random_forest(X_train, y_train):
+    random_forest = RandomForestRegressor(random_state=42)
+    random_forest.fit(X_train, y_train)
+    return random_forest
+
+def select_best_model(X, y):
+    """
+    주어진 모델 중에서 가장 낮은 MSE를 가진 모델을 선택
+    model_list = [
+        ("MLP", mlp_model),  # "MLP"는 모델 이름, mlp_model은 모델 인스턴스
+        ("Decision Tree", decision_tree_model),
+        ("Random Forest", random_forest_model)
+        ]
+    Parameters:
+    - X: 입력 데이터
+    - y: 목표 변수
+    - models: 모델 리스트, 각 모델은 (model_name, model_instance) 형태.
+
+    Returns:
+    - best_model: 가장 낮은 MSE를 가진 모델의 이름
+    - best_mse: 가장 낮은 MSE 값
+    """
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+    models_dict = {
+        "MLP": make_mlp(X_train, y_train),
+        "Decision Tree": make_decision_tree(X_train, y_train),
+        "Random Forest": make_random_forest(X_train, y_train)
+    }
+    mse_scores = []
+    for model_name, model_instance in models_dict.items():
+        model = model_instance
+        model.fit(X_train, y_train)
+        predictions = model.predict(X_test)
+        mse = mean_squared_error(y_test, predictions)
+        mse_scores.append((model_name, mse))
+
+    best_model_name, best_mse = min(mse_scores, key=lambda x: x[1])
+    best_model = models_dict.get(best_model_name)
+    return best_model_name, best_model, best_mse
+
+def visualize_best_model_performance(X, y, best_model_name, best_model_instance):
+    st.markdown("#### Best model")
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+    best_model_instance.fit(X_train, y_train)
+    predictions = best_model_instance.predict(X_test)
+    mse = mean_squared_error(y_test, predictions)
+
+    fig = plt.figure(figsize=(10, 4))
+    plt.scatter(y_test, predictions, alpha=0.5)
+    plt.xlabel("Actual Values")
+    plt.ylabel("Predicted Values")
+    plt.title(f"{best_model_name} Model Performance (MSE: {mse})")
+    st.pyplot(fig, use_container_width=True)
+
+def model_predictions_and_visual(new_data, best_model):
+    """
+    새로운 입력 데이터와 모델 예측 결과를 함께 시각화합니다.
+
+    Parameters:
+    - new_data: 새로운 입력 데이터
+    - predictions: 모델의 예측 결과
+    """
+    predictions = best_model.predict(new_data)
+    predictions_df = pd.DataFrame({'Predicted': predictions})
+    result_df = new_data.join(predictions_df, how='inner')
+    # Plotly를 사용하여 scatter plot 생성
+    # Plotly를 사용하여 scatter plot 생성 (로그 스케일)
+    fig = px.scatter(result_df, x=result_df.index, y='Predicted', title='Predicted Values',
+                     labels={'index': 'Index', 'Predicted': 'Predicted Values'},
+                     color_discrete_sequence=['red'])
+
+    # x-축과 y-축을 로그 스케일로 설정
+    fig.update_xaxes(type='log')
+    fig.update_yaxes(type='log')
+
+    # Streamlit에 그래프 출력
+    st.plotly_chart(fig, use_container_width=True)
+    return result_df
