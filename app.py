@@ -46,7 +46,7 @@ def main():
     # tab1, tab2, tab3, tab4 = st.tabs(["Text Analysis", "Time Series Analysis", "Multiple Numerical Analysis", "Classification Analysis"])
     # Text Analysis
     with tab1:
-        col1_tab1, col2_tab1 = st.columns([1, 2])
+        col1_tab1, col2_tab1 = st.columns(2)
         with col1_tab1:
             st.subheader("1. Data Preparation")
             col1_col1_tab2, col2_col1_tab2 = st.columns([2, 1])
@@ -94,7 +94,7 @@ def main():
                     plot_networkg(corpus, dictionary)
     # Time Series Analysis
     with tab2:
-        col1_tab2, col2_tab2 = st.columns([1, 2])
+        col1_tab2, col2_tab2 = st.columns(2)
         with col1_tab2:
 
             st.subheader("1. Data Preparation")
@@ -124,7 +124,7 @@ def main():
                 with tab2_col2_tab3: 
                     plot_timesseries_arima(timeseries)
     with tab3:
-        col1_tab3, col2_tab3 = st.columns([1, 2])
+        col1_tab3, col2_tab3 = st.columns(2)
         with col1_tab3:
 
             st.subheader("1. Data Preparation")

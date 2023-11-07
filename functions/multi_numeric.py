@@ -1,58 +1,20 @@
-# # # 단계 1: 데이터 로드 및 전처리
-# # #
-# # # load_data: 데이터를 로드하고 데이터프레임을 생성합니다.
-# # # preprocess_data: 결측값을 보간하는 데이터 전처리를 수행합니다.
-# # # 단계 2: 데이터 분석
-# # #
-# # # split_data: 수치형과 범주형 데이터로 데이터를 분리합니다.
-# # # correlation_analysis: 수치형 데이터 간의 상관 관계를 시각화하여 분석합니다.
-# # # missing_value_analysis: 결측값을 시각화하여 분석합니다.
-# # # numerical_distribution_analysis: 수치형 데이터의 분포를 히스토그램으로 시각화하여 분석합니다.
-# # # normality_analysis: 수치형 데이터의 정규성을 확인하기 위해 Q-Q 플롯을 시각화하여 분석합니다.
-# # # categorical_distribution_analysis: 범주형 데이터의 분포를 바 차트로 시각화하여 분석합니다.
-# # # 단계 3: PCA (주성분 분석)를 사용한 차원 축소
-# # #
-# # # pca_reduction: PCA를 사용하여 수치형 데이터의 차원을 축소하고 주성분을 추출합니다.
-# # # 단계 4: t-SNE (t-Distributed Stochastic Neighbor Embedding)를 사용한 차원 축소
-# # #
-# # # tsne_reduction: t-SNE를 사용하여 수치형 데이터의 차원을 축소하고 데이터를 시각화합니다.
-# # # 단계 5: MLP (다층 퍼셉트론) 모델 학습 및 평가
-# # #
-# # # mlp_model: MLP 회귀 모델을 생성하고 학습합니다.
-# # # evaluate_mlp_model: MLP 모델을 평가하고 MSE (평균 제곱 오차)를 계산합니다.
-# # # tsne_visualization: t-SNE로 축소된 데이터를 2차원 그래프로 시각화합니다.
-# # # mlp_results_visualization: MLP 모델의 결과를 시각화하고 실제 값과 예측 값의 관계를 나타내며, MSE를 표시합니다.
-# # # 단계 6: 실행 및 결과 확인
-# # #
-# # # main: 위의 단계를 실행하여 데이터 분석 및 모델링을 수행하고 결과를 확인합니다.
-# # # 각 단계에서 주요 작업과 시각화를 수행하여 데이터 분석 및 모델링 프로세스를 완료합니다.
-# #
-# # colomn1은 전처리 및 데이터 시각화
-# # column2은 예측 모델링 및 분류 모델
-#
-#
-# #
 import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from sklearn.manifold import TSNE
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
-import scipy.stats as stats
-from scipy.stats import chi2_contingency
 import missingno as msno
 import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
 import statsmodels.api as sm
-
-
+from yellowbrick.classifier import ROCAUC
 #
 def call_example_multi_numeric():
     data = {
@@ -98,7 +60,7 @@ def is_na(df):
 
 def plot_missing_value(df):
     fig, ax = plt.subplots(figsize=(10, 4))  # 그래프 크기 지정
-    msno.matrix(df, ax=ax)
+    msno.matrix(df, ax=ax, sparkline=False)
     st.pyplot(fig, use_container_width=True)
     return None
 
@@ -114,7 +76,7 @@ def plot_distribution(numerical_data):
     sns.set_style("white")
     fig = plt.figure(figsize=(10, 4))
     for i in range(standardized_data.shape[1]):
-        sns.distplot(standardized_data[:, i], kde=True, label=numerical_data.columns[i])
+        sns.histplot(standardized_data[:, i], kde=True, label=numerical_data.columns[i])
     plt.xlabel("Feature Value")
     plt.ylabel("Density")
     plt.title("Distribution of Numerical Features")
@@ -124,7 +86,6 @@ def plot_distribution(numerical_data):
 
 
 def plot_normality(numerical_data):
-    num_cols = numerical_data.shape[1]
 
     fig, ax = plt.subplots(1, 1, figsize=(10, 4))
     fig.suptitle("Q-Q Plot for Normality Check (Numerical Features)")
@@ -214,20 +175,14 @@ def preprocess_data(df, show=True):
     return preprocessed_df
 
 
-def make_mlp(X_train, y_train):
-    mlp_regressor = MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=1000, random_state=42)
-    mlp_regressor.fit(X_train, y_train)
-    return mlp_regressor
-
-
 def make_decision_tree(X_train, y_train):
-    decision_tree = DecisionTreeRegressor(random_state=42)
+    decision_tree = DecisionTreeRegressor()
     decision_tree.fit(X_train, y_train)
     return decision_tree
 
 
 def make_random_forest(X_train, y_train):
-    random_forest = RandomForestRegressor(random_state=42)
+    random_forest = RandomForestRegressor()
     random_forest.fit(X_train, y_train)
     return random_forest
 
@@ -252,7 +207,6 @@ def select_best_model(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
     models_dict = {
-        "MLP": make_mlp(X_train, y_train),
         "Decision Tree": make_decision_tree(X_train, y_train),
         "Random Forest": make_random_forest(X_train, y_train)
     }
@@ -292,7 +246,7 @@ def visualize_best_model_performance(X, y, best_model_name, best_model_instance)
     plt.scatter(y_test, predictions, alpha=0.5)
     plt.xlabel("Actual Values")
     plt.ylabel("Predicted Values")
-    plt.title(f"{best_model_name} Model Performance (MSE: {mse})")
+    plt.title(f"{best_model_name} Model Performance (MSE: {round(mse,2)})")
     st.pyplot(fig, use_container_width=True)
 
 def model_predictions_and_visual(new_data, best_model):
