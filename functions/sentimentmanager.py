@@ -78,8 +78,8 @@ class SentimentManager:
 
 def plot_distribution(df):
     sns.set_style("white")
-    num_columns = 1
-    num_rows =  len(df.columns) # 각 행에 하나의 그래프를 배치
+    num_columns = len(df.columns) 
+    num_rows =  1# 각 행에 하나의 그래프를 배치
     fig, axes = plt.subplots(num_rows, num_columns, figsize=(10, 4))
 
     for i, column in enumerate(df.columns):
