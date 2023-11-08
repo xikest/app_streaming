@@ -1,7 +1,7 @@
 from functions.sentimentmanager import sample_sentences
 from functions.sentimentmanager import SentimentManager
 import pandas as pd
-
+import streamlit as st
 
 def download_df_as_csv(df: pd.DataFrame, file_name: str, key:str, preview=True, label:str="Download") -> None:
     csv_file = df.to_csv(index=False).encode('utf-8')
