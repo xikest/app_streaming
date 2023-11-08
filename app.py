@@ -21,13 +21,11 @@ def main():
     # basic setting
     st.set_page_config(
         page_title="plot stream",
-        layout="wide")
+                       layout="wide")
 
     # session state initialize
     st.session_state.setdefault("tab1", None)
-    st.session_state.setdefault("tab2", None)
-    st.session_state.setdefault("tab3", None)
-
+    
     # Title
     st.header("Plot Visualization")
 
