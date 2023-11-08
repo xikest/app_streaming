@@ -72,4 +72,32 @@ class SentimentManager:
 
 
 
+def plot_distribution(df):
+    sns.set_style("white")
+    num_columns = len(df.columns)
+    num_rows = 1  # 각 행에 하나의 그래프를 배치
+    fig, axes = plt.subplots(num_rows, num_columns, figsize=(10, 4))
+
+    for i, column in enumerate(df.columns):
+        sns.histplot(df[column], kde=True, label=column, bins=5, ax=axes[i])
+        axes[i].set_xlabel("Feature Value")
+        axes[i].set_ylabel("Density")
+        axes[i].set_title(f"Distribution of {column}")
+        axes[i].legend()
+        sns.despine()
+
+    plt.tight_layout()
+    st.pyplot(fig, use_container_width=True)
+
+
+def plot_wordcloud(nouns):
+    # Create a WordCloud object with the desired settings
+    wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
+    # Create a Matplotlib figure and axis
+    plt.figure(figsize=(8, 5))
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    # Display the Matplotlib figure within Streamlit
+    st.pyplot(plt, use_container_width=True)
+
 
