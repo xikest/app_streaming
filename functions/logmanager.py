@@ -31,3 +31,17 @@ class LogManager:
 
             # self.add_message("assistant", "You are a thoughtful assistant, and you understand all inputs in English. Respond to all input in 20 words and answer in korea")
             # self.save_log(log_file)
+
+def download_df_as_csv(df: pd.DataFrame, file_name: str, key:str, preview=True, label:str="Download") -> None:
+
+    csv_file = df.to_csv(index=False).encode('utf-8')
+    st.download_button(
+        label,
+        csv_file,
+        f"{file_name}.csv",
+        "text/csv",
+        key=key
+    )
+    # if preview:
+    #     st.dataframe(df.head(3))
+    return None
