@@ -1,5 +1,7 @@
 from functions.sentimentmanager import sample_sentences
 from functions.sentimentmanager import SentimentManager
+from functions.sentimentmanager import plot_distribution
+
 import pandas as pd
 import streamlit as st
 
