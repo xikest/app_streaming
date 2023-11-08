@@ -1,6 +1,5 @@
 from functions.sentimentmanager import sample_sentences
 from functions.sentimentmanager import SentimentManager
-from functions.text import  *
 
 def download_df_as_csv(df: pd.DataFrame, file_name: str, key:str, preview=True, label:str="Download") -> None:
 
