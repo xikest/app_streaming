@@ -72,7 +72,7 @@ def main():
         text_data_uploaded = df_sample_sentences
         if text_data_uploaded is not None:
             st.write("1")
-            df.dataframe(text_data_uploaded.head(2))
+            sf.dataframe(text_data_uploaded.head(2))
             try:
                 # sentences = read_comments_from(text_data_uploaded, column_name="sentences")
                 sentences= df_sample_sentences
