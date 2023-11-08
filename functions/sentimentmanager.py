@@ -1,5 +1,9 @@
 import pandas as pd
-
+from wordcloud import WordCloud
+import plotly.express as px
+import streamlit as st
+import matplotlib.pyplot as plt
+import seaborn as sns
 from functions.aimanager import AIManager
 from functions.logmanager import LogManager
 
@@ -87,6 +91,7 @@ def plot_distribution(df):
         sns.despine()
 
     plt.tight_layout()
+    #return fig
     st.pyplot(fig, use_container_width=True)
 
 
@@ -98,6 +103,7 @@ def plot_wordcloud(nouns):
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
     # Display the Matplotlib figure within Streamlit
+    #returnfig
     st.pyplot(plt, use_container_width=True)
 
 
