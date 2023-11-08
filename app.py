@@ -72,11 +72,9 @@ def main():
         text_data_uploaded = sample_sentences()
         st.dataframe(text_data_uploaded.head(2))
         if text_data_uploaded is not None:
-            st.write("1")
-            st.dataframe(text_data_uploaded.head(2))
             try:
                 # sentences = read_comments_from(text_data_uploaded, column_name="sentences")
-                sentences= df_sample_sentences
+                sentences= text_data_uploaded
                 st.dataframe(sentences)
                 sentences = [sentence for sentence in sentences["sentences"]] # 리스트로 변환
                 keywords = ["color", "brightness"]
