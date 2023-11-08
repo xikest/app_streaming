@@ -95,7 +95,8 @@ def main():
                 st.error('Please verify the file format', icon="🚨")
     with col2:
             st.subheader("3. Visualization")
-            df_result_v = st.session_state["result"]
+            df_result_v = st.session_state.get("result")
+           # df_result_v = st.session_state["result"]
             plot_distribution(df_result_v)
 
             #
