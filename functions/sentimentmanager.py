@@ -19,7 +19,25 @@ def sample_sentences() -> pd.DataFrame:
     st.markdown("**Supported Formats: CSV, Excel, Text**")
     st.markdown("Excel (or CSV) Considerations: `sentences` column is the subject of analysis.")
     return df
-
+def read_sentence_from(data_uploaded, column_name="sentences") -> pd.Series:
+    df = pd.DataFrame()
+    supported_formats = ['.csv', '.xlsx', '.txt']
+    if data_uploaded.name.endswith(tuple(supported_formats)):
+        if data_uploaded.name.endswith('.csv'):
+            df = pd.read_csv(data_uploaded)
+        elif data_uploaded.name.endswith('.xlsx'):
+            df = pd.read_excel(data_uploaded, engine='openpyxl')
+        elif data_uploaded.name.endswith('.txt'):
+            df = pd.read_csv(data_uploaded, delimiter='\t')  # Assuming tab-separated text file
+    else:
+        st.error("This file format is not supported. Please upload a CSV, Excel, or text file.")
+        st.stop()
+    try:
+        comments = df.loc[:, column_name]
+    except KeyError:
+        comments = df.iloc[:, 0]
+    return comments
+    
 class SentimentManager:
     def __init__(self, api_key):
         # print(f"token: {token}")
