@@ -4,14 +4,21 @@ from functions.aimanager import AIManager
 from functions.logmanager import LogManager
 
 
-def sample_sentences():
-     sentences= [
-                "The product's hue and vividness are excellent.",
-                "The brightness is great, but the color is not good.",
-                "The viewing angle is disappointing, and the color is satisfactory."
+def sample_sentences() -> pd.DataFrame:
+    # creating exmaple data
+    sentences = {
+        'sentences': [
+             "The product's hue and vividness are excellent.",
+             "The brightness is great, but the color is not good.",
+             "The viewing angle is disappointing, and the color is satisfactory."
      ]
 
-     return pd.DataFrame({"sentences": sentences})
+    }
+    # dataframe
+    df = pd.DataFrame(sentences)
+    st.markdown("**Supported Formats: CSV, Excel, Text**")
+    st.markdown("Excel (or CSV) Considerations: `sentences` column is the subject of analysis.")
+    return df
 
 class SentimentManager:
     def __init__(self, api_key):
