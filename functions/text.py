@@ -1,17 +1,9 @@
 import pandas as pd
-from nltk.probability import FreqDist
-from nltk import pos_tag
 from wordcloud import WordCloud
 import plotly.express as px
 import streamlit as st
-import networkx as nx
 import matplotlib.pyplot as plt
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-import gensim
-from gensim import corpora
 import re
-import nltk
 import seaborn as sns
 
 
@@ -51,30 +43,6 @@ def read_comments_from(data_uploaded, column_name="comments") -> pd.Series:
         comments = df.iloc[:, 0]
     return comments
 
-def prepare_nouns(comments):
-    all_words = []
-    # nltk data download
-    nltk.download('punkt')
-    nltk.download('stopwords')
-    nltk.download('averaged_perceptron_tagger')
-    for comment in comments:
-        tokens = word_tokenize(comment)  # tokenize
-        all_words.extend(tokens)
-    # stopward
-    stop_words = set(stopwords.words('english'))
-    filtered_words = [word.lower() for word in all_words if
-                      word.isalnum() and word.lower() not in stop_words]
-    # nouns
-    nouns = [word for (word, tag) in pos_tag(filtered_words) if tag.startswith('N')]
-    return nouns
-    
-def prepare_word_freq(nouns) -> pd.DataFrame:
-    # nouns frequncy
-    noun_counts = FreqDist(nouns)
-    df_word_freq = pd.DataFrame(list(noun_counts.items()), columns=['Nouns', 'Frequency'])
-    # sorted
-    df_word_freq = df_word_freq.sort_values(by='Frequency', ascending=False)
-    return df_word_freq
 
 
 def download_df_as_csv(df: pd.DataFrame, file_name: str, key:str, preview=True, label:str="Download") -> None:
