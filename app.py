@@ -1,6 +1,7 @@
 from functions.sentimentmanager import sample_sentences
 from functions.sentimentmanager import SentimentManager
 from functions.sentimentmanager import plot_distribution
+from functions.sentimentmanager import read_sentence_from
 
 import pandas as pd
 import streamlit as st
@@ -69,12 +70,12 @@ def main():
         # st.markdown("---")
         # download_df_as_csv(df_example_comments, file_name="sample_text_data", key="download_text_sample_csv", label="Sample")
         st.markdown("---")
-        text_data_uploaded = sample_sentences()
-        st.dataframe(text_data_uploaded.head(2))
+        # text_data_uploaded = sample_sentences()
+        # st.dataframe(text_data_uploaded.head(2))
         if text_data_uploaded is not None:
             try:
-                sentences = read_comments_from(text_data_uploaded, column_name="sentences")
-                sentences= text_data_uploaded
+                sentences = read_sentence_from(text_data_uploaded, column_name="sentences")
+                # sentences= text_data_uploaded
                 # st.dataframe(sentences)
                 sentences = [sentence for sentence in sentences["sentences"]] # 리스트로 변환
                 keywords = ["color", "brightness"]
