@@ -1,6 +1,22 @@
 from functions.sentimentmanager import sample_sentences
 from functions.sentimentmanager import SentimentManager
 from functions.text import  *
+
+def download_df_as_csv(df: pd.DataFrame, file_name: str, key:str, preview=True, label:str="Download") -> None:
+
+    csv_file = df.to_csv(index=False).encode('utf-8')
+    st.download_button(
+        label,
+        csv_file,
+        f"{file_name}.csv",
+        "text/csv",
+        key=key
+    )
+    # if preview:
+    #     st.dataframe(df.head(3))
+    return None
+
+
 def main():
     # basic setting
     st.set_page_config(
