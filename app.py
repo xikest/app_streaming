@@ -27,7 +27,7 @@ def main():
 
     # session state initialize
     st.session_state.setdefault("tab1", None)
-    st.session_state['result'] =None
+    
     # Title
     st.header("Plot Visualization")
 
@@ -88,7 +88,6 @@ def main():
 
                 st.subheader("2. Analysis results")
                 df_results = pd.DataFrame(list(dict_analyzed_results.values()))
-                sr.dataframe(df_results.head(3))
                 st.session_state['result'] = df_results
                 download_df_as_csv(df_results, file_name="sentiment_analysis", key="download_csv_text_analysis", label="Result download")
                 st.dataframe(df_results.head(3))
