@@ -74,7 +74,7 @@ def main():
             try:
                 # sentences = read_comments_from(text_data_uploaded, column_name="sentences")
                 sentences= df_sample_sentences
-                # st.dataframe(sentences)
+                st.dataframe(sentences)
                 sentences = [sentence for sentence in sentences["sentences"]] # 리스트로 변환
                 keywords = ["color", "brightness"]
                 sentimentManager = SentimentManager(API_KEY)
@@ -83,6 +83,7 @@ def main():
                 for key, value in dict_analyzed_results.items():
                     print(f"Sentence: '{key}' - Sentiment Scores: {value}")
                 # 딕셔너리에서 칼럼 이름 추출
+                st.write("fin")
 
 
 
