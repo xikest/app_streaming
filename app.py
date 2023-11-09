@@ -70,7 +70,7 @@ def main():
         # st.markdown("---")
         # download_df_as_csv(df_example_comments, file_name="sample_text_data", key="download_text_sample_csv", label="Sample")
         st.markdown("---")
-        text_data_uploaded = sample_sentences()
+        # text_data_uploaded = sample_sentences()
         # st.dataframe(text_data_uploaded.head(2))
         if text_data_uploaded is not None:
             try:
