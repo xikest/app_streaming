@@ -11,6 +11,7 @@ def main():
 
     # session state initialize
     st.session_state["API_KEY"] = None
+    st.session_state["upload"] = None
     st.session_state["result"] = None
     st.session_state["keywords"] = ["brightness", "color", "contrast", "reflection", "viewing angle"]
 
@@ -49,15 +50,13 @@ def main():
         stm.download_df_as_csv(df_sample_sentences, file_name="sample_text_data", key="download_text_sample_csv", label="Sample download")
         if st.session_state["API_KEY"]:
             df_uploaded = st.file_uploader("Upload Text data", key="text_data")
-
-            # text_data_uploaded = df_sample_sentences
             st.markdown("---")
-            if df_uploaded:  ## 업로드
+            if st.session_state["upload"] is not df_uploaded:  ## 업로드
+                st.session_state["upload"] = df_uploaded
+                # text_data_uploaded = df_sample_sentences
                 df_uploaded = stm.read_df_from(df_uploaded)
                 df_uploaded['sentences'] = df_uploaded['sentences'].apply(stm.preprocess_text)
                 try:
-
-
                     df_sentences = df_uploaded
                     list_sentences = [sentence for sentence in df_sentences["sentences"]]  # 리스트로 변환
                     list_keywords = st.session_state["keywords"]
