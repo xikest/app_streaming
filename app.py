@@ -70,15 +70,15 @@ def main():
         # st.markdown("---")
         # download_df_as_csv(df_example_comments, file_name="sample_text_data", key="download_text_sample_csv", label="Sample")
         st.markdown("---")
-        # text_data_uploaded = sample_sentences()
+        text_data_uploaded = sample_sentences()
         # st.dataframe(text_data_uploaded.head(2))
         if text_data_uploaded is not None:
             try:
-                sentences = read_sentence_from(text_data_uploaded, column_name="sentences")
-                # sentences= text_data_uploaded
+                # sentences = read_sentence_from(text_data_uploaded, column_name="sentences")
+                sentences= text_data_uploaded
                 # st.dataframe(sentences)
                 sentences = [sentence for sentence in sentences["sentences"]] # 리스트로 변환
-                keywords = ["color", "brightness"]
+                keywords = ["color", "brightness","contrast", "reflection", "viewing"]
                 sentimentManager = SentimentManager(API_KEY)
 
                 dict_analyzed_results = sentimentManager.analyze_sentences(sentences, keywords)
