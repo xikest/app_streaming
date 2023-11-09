@@ -70,8 +70,10 @@ def main():
                     print('fin')
                 except:
                     st.error('Re-Check', icon="🚨")
+            else:
+                st.error("UPLOAD the data following the guide.,icon="🚨")
         else:
-            st.error("PLEASE INPUT YOUR API-KEY")
+            st.error("Input your GPT API KEY., icon="🚨")
     with col2:
         if  st.session_state["result"] is not None:
             st.subheader("3. Visualization")
