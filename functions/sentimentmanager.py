@@ -1,6 +1,5 @@
 import pandas as pd
-from wordcloud import WordCloud
-import plotly.express as px
+# from wordcloud import WordCloud
 import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -95,13 +94,13 @@ def plot_distribution(df):
     st.pyplot(fig, use_container_width=True)
 
 
-def plot_wordcloud(nouns):
-    # Create a WordCloud object with the desired settings
-    wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
-    # Create a Matplotlib figure and axis
-    plt.figure(figsize=(8, 5))
-    plt.imshow(wordcloud, interpolation='bilinear')
-    plt.axis("off")
-    # Display the Matplotlib figure within Streamlit
-    #returnfig
-    st.pyplot(plt, use_container_width=True)
+# def plot_wordcloud(nouns):
+#     # Create a WordCloud object with the desired settings
+#     wordcloud = WordCloud(width=800, height=400, background_color="white").generate(" ".join(nouns))
+#     # Create a Matplotlib figure and axis
+#     plt.figure(figsize=(8, 5))
+#     plt.imshow(wordcloud, interpolation='bilinear')
+#     plt.axis("off")
+#     # Display the Matplotlib figure within Streamlit
+#     #returnfig
+#     st.pyplot(plt, use_container_width=True)
