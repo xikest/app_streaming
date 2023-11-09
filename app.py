@@ -99,24 +99,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-# tab1, tab2, tab3, tab4, tab5 = st.tabs(st.session_state["keywords"])
-# tabs = [tab1, tab2, tab3, tab4, tab5]
-#
-# # fig, axes = plt.subplots(num_rows, num_columns, figsize=(6, 3 * num_rows), sharey=True)
-# columns = df_analyzed_results.columns
-# for i, column in enumerate(columns):
-#     # tabs = st.tabs(columns)
-#     with tabs[i]:
-#         sns.set_style("white")
-#         fig, axes = plt.subplots(figsize=(10, 4))
-#         sns.histplot(df_analyzed_results[column], kde=True, label=column, bins=10, ax=axes)
-#         axes.set_ylabel("Density")
-#         axes.set_title(f"{column}")
-#         axes.legend(loc="upper right")
-#         axes.set_xlim(1, 10)
-#         axes.set_xlabel("")
-#         sns.despine()
-#         plt.tight_layout()
-#         st.pyplot(fig, use_container_width=True)
-
