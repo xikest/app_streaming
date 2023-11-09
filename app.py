@@ -1,9 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
-from functions.sentimentmanager import sample_sentences
 from functions.sentimentmanager import SentimentManager
-from functions.commonmanager import download_df_as_csv, read_df_from
 
 def main():
     # basic setting
@@ -33,6 +31,7 @@ def main():
 
 
         st.session_state["API_KEY"] = API_KEY
+        stm = SentimentManager(API_KEY)
         # print(st.session_state["API_KEY"] is True)
         st.markdown("---")
 
@@ -46,24 +45,25 @@ def main():
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("1. Data Preparation")
-        df_sample_sentences = sample_sentences()
-        download_df_as_csv(df_sample_sentences, file_name="sample_text_data", key="download_text_sample_csv", label="Sample download")
+        df_sample_sentences = stm.sample_sentences()
+        stm.download_df_as_csv(df_sample_sentences, file_name="sample_text_data", key="download_text_sample_csv", label="Sample download")
         if st.session_state["API_KEY"]:
-            text_data_uploaded = st.file_uploader("Upload Text data", key="text_data")
+            df_uploaded = st.file_uploader("Upload Text data", key="text_data")
 
             # text_data_uploaded = df_sample_sentences
             st.markdown("---")
-            if text_data_uploaded:  ## 업로드
-                text_data_uploaded = read_df_from(text_data_uploaded)
+            if df_uploaded:  ## 업로드
+                df_uploaded = stm.read_df_from(df_uploaded)
+                df_uploaded['sentences'] = df_uploaded['sentences'].apply(stm.preprocess_text)
                 try:
 
-                    sentimentManager = SentimentManager(API_KEY)
-                    df_sentences = text_data_uploaded
+
+                    df_sentences = df_uploaded
                     list_sentences = [sentence for sentence in df_sentences["sentences"]]  # 리스트로 변환
                     list_keywords = st.session_state["keywords"]
-                    df_analyzed_results = sentimentManager.analyze_sentences(list_sentences, list_keywords)
+                    df_analyzed_results = stm.analyze_sentences(list_sentences, list_keywords)
                     st.subheader("2. Analysis results")
-                    download_df_as_csv(df_analyzed_results, file_name="sentiment_analysis", key="download_csv_text_analysis", label="Result download")
+                    stm.download_df_as_csv(df_analyzed_results, file_name="sentiment_analysis", key="download_csv_text_analysis", label="Result download")
                     st.dataframe(df_analyzed_results.head(3))
                     st.session_state["result"] = df_analyzed_results
                     st.session_state["API_KEY"] = None
