@@ -71,7 +71,7 @@ class SentimentManager:
                 st.write(keyword)
                 # print(f"{i}_{keyword}")
                 dict_analyzed_scores.update({keyword: self.analyze_sentiment(keyword, sentence)})
-                st.write(dict_analyzed_scores)
+                st.write(dict_analyzed_scores.keys())
             dict_analyzed_results[f"{i}_{sentence}"] = dict_analyzed_scores
         return dict_analyzed_results
 
