@@ -12,7 +12,7 @@ def main():
     # session state initialize
     st.session_state["API_KEY"] = None
     st.session_state["result"] = None
-    st.session_state["keywords"] = ["brightness", "color", "contrast", "reflection", "viewing"]
+    st.session_state["keywords"] = ["brightness", "color", "contrast", "reflection", "viewing angle"]
 
     # Title
     st.header("Plot Visualization")
