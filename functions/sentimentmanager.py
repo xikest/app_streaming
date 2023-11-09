@@ -68,6 +68,7 @@ class SentimentManager:
         for i, sentence in enumerate(input_sentences):
             dict_analyzed_scores = dict()
             for keyword in keywords:
+                st.write(keyword)
                 # print(f"{i}_{keyword}")
                 dict_analyzed_scores.update({keyword: self.analyze_sentiment(keyword, sentence)})
             dict_analyzed_results[f"{i}_{sentence}"] = dict_analyzed_scores
