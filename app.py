@@ -45,6 +45,7 @@ def main():
                                        type="password")
         #API_KEY = "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"
         st.session_state["API_KEY"] = API_KEY
+        st.session_state["result"] = None
 
         st.markdown("---")
         # GPT 모델을 선택하기 위한 라디오 버튼 생성
@@ -71,7 +72,7 @@ def main():
         # download_df_as_csv(df_example_comments, file_name="sample_text_data", key="download_text_sample_csv", label="Sample")
         st.markdown("---")
         text_data_uploaded = sample_sentences()
-        # st.dataframe(text_data_uploaded.head(2))
+        st.dataframe(text_data_uploaded.head(2))
         if text_data_uploaded is not None:
             try:
                 # sentences = read_sentence_from(text_data_uploaded, column_name="sentences")
@@ -85,7 +86,7 @@ def main():
                 for key, value in dict_analyzed_results.items():
                     print(f"Sentence: '{key}' - Sentiment Scores: {value}")
                 # 딕셔너리에서 칼럼 이름 추출
-                # st.write("fin")
+                st.write("fin")
 
 
 
@@ -97,10 +98,10 @@ def main():
             except:
                 st.error('Please verify the file format', icon="🚨")
     with col2:
-            st.subheader("3. Visualization")
-            df_result_v = st.session_state.get("result")
-           # df_result_v = st.session_state["result"]
-            plot_distribution(df_result_v)
+            if st.session_state["result"] is not None:
+                st.subheader("3. Visualization")
+                df_result_v = st.session_state.get("result")
+                plot_distribution(df_result_v)
 
             #
             # tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["Plot", "Word Cloud"])
