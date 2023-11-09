@@ -78,7 +78,7 @@ def main():
                 # sentences= text_data_uploaded
                 # st.dataframe(sentences)
                 sentences = [sentence for sentence in sentences["sentences"]] # 리스트로 변환
-                keywords = ["color", "brightness"]
+                keywords = ["color", "brightness", "contrast", "reflection","viewing"]
                 sentimentManager = SentimentManager(API_KEY)
 
                 dict_analyzed_results = sentimentManager.analyze_sentences(sentences, keywords)
