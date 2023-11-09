@@ -31,5 +31,3 @@ class LogManager:
 
             # self.add_message("assistant", "You are a thoughtful assistant, and you understand all inputs in English. Respond to all input in 20 words and answer in korea")
             # self.save_log(log_file)
-
-

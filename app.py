@@ -1,34 +1,21 @@
+import streamlit as st
+import matplotlib.pyplot as plt
+import seaborn as sns
 from functions.sentimentmanager import sample_sentences
 from functions.sentimentmanager import SentimentManager
-from functions.sentimentmanager import plot_distribution
-from functions.sentimentmanager import read_sentence_from
-
-import pandas as pd
-import streamlit as st
-
-def download_df_as_csv(df: pd.DataFrame, file_name: str, key:str, preview=True, label:str="Download") -> None:
-    csv_file = df.to_csv(index=False).encode('utf-8')
-    st.download_button(
-        label,
-        csv_file,
-        f"{file_name}.csv",
-        "text/csv",
-        key=key
-    )
-    # if preview:
-    #     st.dataframe(df.head(3))
-    return None
-
+from functions.commonmanager import download_df_as_csv, read_df_from
 
 def main():
     # basic setting
     st.set_page_config(
         page_title="plot stream",
-                       layout="wide")
+        layout="wide")
 
     # session state initialize
-    st.session_state.setdefault("tab1", None)
-    
+    st.session_state["API_KEY"] = None
+    st.session_state["result"] = None
+    st.session_state["keywords"] = ["brightness", "color", "contrast", "reflection", "viewing"]
+
     # Title
     st.header("Plot Visualization")
 
@@ -43,16 +30,12 @@ def main():
         # Open AI API 키 입력받기
         API_KEY = st.text_input(label="OPENAI API 키", placeholder="Enter Your API Key", value="",
                                        type="password")
-        #API_KEY = "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"
+
+
         st.session_state["API_KEY"] = API_KEY
-        st.session_state["result"] = None
-
+        # print(st.session_state["API_KEY"] is True)
         st.markdown("---")
-        # GPT 모델을 선택하기 위한 라디오 버튼 생성
-        model = st.radio(label="GPT 모델", options=["gpt-3.5-turbo", "gpt-4"])
-        st.session_state["model"] = model
 
-        st.markdown("---")
         st.write(
             """     
             Written by TJ.Kim ☕
@@ -60,59 +43,80 @@ def main():
         )
         st.markdown("---")
 
-
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("1. Data Preparation")
         df_sample_sentences = sample_sentences()
         download_df_as_csv(df_sample_sentences, file_name="sample_text_data", key="download_text_sample_csv", label="Sample download")
-        st.dataframe(df_sample_sentences.head())
-        text_data_uploaded = st.file_uploader("Upload Text data", key="text_data")
-        # st.markdown("---")
-        # download_df_as_csv(df_example_comments, file_name="sample_text_data", key="download_text_sample_csv", label="Sample")
-        st.markdown("---")
-        text_data_uploaded = sample_sentences()
-        st.dataframe(text_data_uploaded.head(2))
-        if text_data_uploaded is not None:
-            try:
-                # sentences = read_sentence_from(text_data_uploaded, column_name="sentences")
-                sentences= text_data_uploaded
-                st.dataframe(sentences)
-                sentences = [sentence for sentence in sentences["sentences"]] # 리스트로 변환
-                keywords = ["color", "brightness","contrast", "reflection", "viewing"]
-                sentimentManager = SentimentManager(API_KEY)
+        if st.session_state["API_KEY"]:
+            text_data_uploaded = st.file_uploader("Upload Text data", key="text_data")
 
-                dict_analyzed_results = sentimentManager.analyze_sentences(sentences, keywords)
-                for key, value in dict_analyzed_results.items():
-                    print(f"Sentence: '{key}' - Sentiment Scores: {value}")
-                # 딕셔너리에서 칼럼 이름 추출
-                st.write("fin")
+            # text_data_uploaded = df_sample_sentences
+            st.markdown("---")
+            if text_data_uploaded:  ## 업로드
+                text_data_uploaded = read_df_from(text_data_uploaded)
+                try:
 
-
-
-                st.subheader("2. Analysis results")
-                df_results = pd.DataFrame(list(dict_analyzed_results.values()))
-                st.session_state['result'] = df_results
-                download_df_as_csv(df_results, file_name="sentiment_analysis", key="download_csv_text_analysis", label="Result download")
-                # st.dataframe(df_results.head(3))
-            except:
-                st.error('Please verify the file format', icon="🚨")
+                    sentimentManager = SentimentManager(API_KEY)
+                    df_sentences = text_data_uploaded
+                    list_sentences = [sentence for sentence in df_sentences["sentences"]]  # 리스트로 변환
+                    list_keywords = st.session_state["keywords"]
+                    df_analyzed_results = sentimentManager.analyze_sentences(list_sentences, list_keywords)
+                    st.subheader("2. Analysis results")
+                    download_df_as_csv(df_analyzed_results, file_name="sentiment_analysis", key="download_csv_text_analysis", label="Result download")
+                    st.dataframe(df_analyzed_results.head(3))
+                    st.session_state["result"] = df_analyzed_results
+                    st.session_state["API_KEY"] = None
+                    print('fin')
+                except:
+                    st.error('Re-Check', icon="🚨")
+        else:
+            st.error("PLEASE INPUT YOUR API-KEY")
     with col2:
-            if st.session_state["result"] is not None:
-                st.subheader("3. Visualization")
-                df_result_v = st.session_state.get("result")
-                plot_distribution(df_result_v)
+        if  st.session_state["result"] is not None:
+            st.subheader("3. Visualization")
+            df_analyzed_results = st.session_state["result"]
 
-            #
-            # tab1_col2_tab1, tab2_col2_tab1 = st.tabs(["Plot", "Word Cloud"])
-            # with tab1_col2_tab1:
-            #     df_result_v = st.session_state["result"]
-            #     plot_distribution(df_result_v)
-            # with tab2_col2_tab1:
-            #     st.write("preparing")
-            #     # nouns = st.session_state["result"]
-            #     # plot_wordcloud(nouns)
+            tab1, tab2, tab3, tab4, tab5 = st.tabs(st.session_state["keywords"])
+            tabs = [tab1, tab2, tab3, tab4, tab5]
+
+            columns = df_analyzed_results.columns
+            for i, column in enumerate(columns):
+                with tabs[i]:
+                    sns.set_style("white")
+                    fig, axes = plt.subplots(figsize=(10, 4))
+                    sns.histplot(df_analyzed_results[column], kde=True, label=column, bins=10, ax=axes)
+                    axes.set_ylabel("Density")
+                    axes.set_title(f"{column}")
+                    # axes.legend(loc="upper right")
+                    axes.set_xlim(1, 10)
+                    axes.set_xlabel("")
+                    sns.despine()
+                    plt.tight_layout()
+                    st.pyplot(fig, use_container_width=True)
 
 
 if __name__ == "__main__":
     main()
+
+
+# tab1, tab2, tab3, tab4, tab5 = st.tabs(st.session_state["keywords"])
+# tabs = [tab1, tab2, tab3, tab4, tab5]
+#
+# # fig, axes = plt.subplots(num_rows, num_columns, figsize=(6, 3 * num_rows), sharey=True)
+# columns = df_analyzed_results.columns
+# for i, column in enumerate(columns):
+#     # tabs = st.tabs(columns)
+#     with tabs[i]:
+#         sns.set_style("white")
+#         fig, axes = plt.subplots(figsize=(10, 4))
+#         sns.histplot(df_analyzed_results[column], kde=True, label=column, bins=10, ax=axes)
+#         axes.set_ylabel("Density")
+#         axes.set_title(f"{column}")
+#         axes.legend(loc="upper right")
+#         axes.set_xlim(1, 10)
+#         axes.set_xlabel("")
+#         sns.despine()
+#         plt.tight_layout()
+#         st.pyplot(fig, use_container_width=True)
+
