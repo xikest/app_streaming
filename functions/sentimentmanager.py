@@ -33,7 +33,8 @@ class SentimentManager:
     def analyze_sentiment(self, keyword:str, sentence:str) -> float:
         try:
             # print(f"keyword {keyword}, sentence {sentence}")
-            self.add_message("assistant", "You are a highly skilled sentiment analyst")
+            self.add_message("assistant", "You excel as a Picture quality expert and demonstrate exceptional skills in sentiment analysis.")
+            # "You are a highly skilled sentiment analyst"
             self.add_message("user", f"Analyze the sentiment of the following text: "
                                      f"Rate the '{keyword}' in the sentence '{sentence}' on a scale from 0 (strongly negative) to 10 (strongly positive)."
                                      f"only respond as only number")
