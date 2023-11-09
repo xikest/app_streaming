@@ -14,14 +14,12 @@ def sample_sentences():
 
     df=  pd.DataFrame({"sentences": sentences})
     st.markdown("**Supported Formats: CSV, Excel, Text**")
-    st.markdown("Excel (or CSV) Considerations: `comments` column is the subject of analysis.")
+    st.markdown("Excel (or CSV) Considerations: `sentences` column is the subject of analysis.")
     return df
 
 
 class SentimentManager:
     def __init__(self, api_key):
-        # print(f"token: {token}")
-        # print(f"api_key: {api_key}")
         self.api_key = api_key
         self.aim = AIManager(self.api_key)
         self.log_manager = LogManager()
