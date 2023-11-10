@@ -52,24 +52,24 @@ def main():
             if st.button("Upload Data"):
                 df_uploaded = st.file_uploader("Upload Data", key="text_data")
                 st.markdown("---")
-            if  df_uploaded is not  st.session_state["upload"] ## 업로드
-                st.session_state["upload"] = df_uploaded
-                # text_data_uploaded = df_sample_sentences
-                df_uploaded = stm.read_df_from(df_uploaded)
-                df_uploaded['sentences'] = df_uploaded['sentences'].apply(stm.preprocess_text)
-                try:
-                    df_sentences = df_uploaded
-                    list_sentences = [sentence for sentence in df_sentences["sentences"]]  # 리스트로 변환
-                    list_keywords = st.session_state["keywords"]
-                    df_analyzed_results = stm.analyze_sentences(list_sentences, list_keywords)
-                    st.subheader("2. Analysis results")
-                    stm.download_df_as_csv(df_analyzed_results, file_name="sentiment_analysis", key="download_csv_text_analysis", label="Result download")
-                    st.dataframe(df_analyzed_results.head(3))
-                    st.session_state["result"] = df_analyzed_results
-                    st.session_state["API_KEY"] = None
-                    print('fin')
-                except:
-                    st.error('Re-Check', icon="🚨")
+                if  df_uploaded is not st.session_state["upload"] ## 업로드
+                    st.session_state["upload"] = df_uploaded
+                    # text_data_uploaded = df_sample_sentences
+                    df_uploaded = stm.read_df_from(df_uploaded)
+                    df_uploaded['sentences'] = df_uploaded['sentences'].apply(stm.preprocess_text)
+                    try:
+                        df_sentences = df_uploaded
+                        list_sentences = [sentence for sentence in df_sentences["sentences"]]  # 리스트로 변환
+                        list_keywords = st.session_state["keywords"]
+                        df_analyzed_results = stm.analyze_sentences(list_sentences, list_keywords)
+                        st.subheader("2. Analysis results")
+                        stm.download_df_as_csv(df_analyzed_results, file_name="sentiment_analysis", key="download_csv_text_analysis", label="Result download")
+                        st.dataframe(df_analyzed_results.head(3))
+                        st.session_state["result"] = df_analyzed_results
+                        st.session_state["API_KEY"] = None
+                        print('fin')
+                    except:
+                        st.error('Re-Check', icon="🚨")
             else:
                 st.error("UPLOAD the data following the guide.",icon="🚨")
         else:
