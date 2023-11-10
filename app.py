@@ -49,9 +49,10 @@ def main():
         df_sample_sentences = stm.sample_sentences()
         stm.download_df_as_csv(df_sample_sentences, file_name="sample_text_data", key="download_text_sample_csv", label="Sample download")
         if st.session_state["API_KEY"]:
-            df_uploaded = st.file_uploader("Upload Text data", key="text_data")
-            st.markdown("---")
-            if st.session_state["upload"] is not df_uploaded:  ## 업로드
+            if st.button("Upload Data"):
+                df_uploaded = st.file_uploader("Upload Data", key="text_data")
+                st.markdown("---")
+            if  df_uploaded is not  st.session_state["upload"] ## 업로드
                 st.session_state["upload"] = df_uploaded
                 # text_data_uploaded = df_sample_sentences
                 df_uploaded = stm.read_df_from(df_uploaded)
