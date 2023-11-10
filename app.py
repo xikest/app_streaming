@@ -24,7 +24,7 @@ def main():
         st.subheader("Project Description")
         st.write("This project supports basic analysis.")
         with st.expander("Usage", expanded=True):
-            st.write("`sentiment Analysis`")
+            st.write("`Sentiment Analysis`")
         st.markdown("---")
         # Open AI API 키 입력받기
         API_KEY = st.text_input(label="OPENAI API 키", placeholder="Enter Your API Key", value="",
