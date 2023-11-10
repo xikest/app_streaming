@@ -104,6 +104,7 @@ class SentimentManager:
         ]
 
         df = pd.DataFrame({"sentences": sentences})
+        df['sentences'] = df['sentences'].apply(self.preprocess_text)
         st.markdown("**Supported Formats: CSV, Excel, Text**")
         st.markdown("Excel (or CSV) Considerations: `sentences` column is the subject of analysis.")
         return df
