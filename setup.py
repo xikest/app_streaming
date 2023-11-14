@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='sentigpt',
-    version='0.14',
+    version='0.143',
     author='xikest',
     description='Sentiment analyze with gpt',
     packages=find_packages(),

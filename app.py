@@ -1,7 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
-from functions.sentimentmanager import SentimentManager
+from sentigpt.sentimentmanager import SentimentManager
 
 def main():
     # basic setting

@@ -2,7 +2,10 @@ import pandas as pd
 import re
 from sentigpt.aimanager import AIManager
 from tqdm import tqdm
-
+import seaborn as sns
+from matplotlib.ticker import MaxNLocator
+import matplotlib.pyplot as plt
+import pickle
 class SentimentManager:
     def __init__(self, api_key, verbose=True, gpt_model="gpt-3.5-turbo-1106"):
         self.api_key = api_key
@@ -17,6 +20,19 @@ class SentimentManager:
 
     def reset_message(self):
         self.messages_prompt =[]
+
+    async def translate_en2kr(self, sentence_en:str) -> str:
+        try:
+            self.add_message("assistant", " You translate English into Korean very naturally.")
+            self.add_message("user", f"translate the following text into Korean.: "
+                                     f"'{sentence_en}'")
+            bot_response = await self.aim.get_text_from_gpt(self.messages_prompt)
+            sentence_kr = bot_response
+        except Exception as e:
+            sentence_kr = sentence_en
+        self.reset_message()  # 리
+
+        return sentence_kr
     def analyze_sentiment(self, keyword:str, sentence:str) -> float:
         try:
             # print(f"keyword {keyword}, sentence {sentence}")
@@ -34,7 +50,7 @@ class SentimentManager:
         self.reset_message()  # 리셋
         return bot_response
 
-    def analyze_sentences(self, input_sentences:list, keywords: list):
+    def analyze_sentences(self, input_sentences:list, keywords: list) ->pd.DataFrame:
         dict_analyzed_scores = dict()
         dict_sentences = dict()
         df_scores_list = []
@@ -55,15 +71,24 @@ class SentimentManager:
         df_scores = pd.concat(df_scores_list, axis=1).T
         df_scores.reset_index(drop=True, inplace=True)
 
-        df_analyzed_results = df_scores - 5
-
-        df_sentences = pd.DataFrame.from_dict(dict_sentences)
-        df_combined = pd.merge(df_analyzed_results, df_sentences, left_index=True, right_index=True)
-
-        return df_combined
+        self.df_analyzed_results = df_scores - 5
+        return self.df_analyzed_results
 
 
-    def download_df_as_csv(self, df: pd.DataFrame) -> None:
+    def save_df_as_pickle(self, df, file_name):
+        pickle_path = f"{file_name}.pkl"
+
+        with open(pickle_path, 'wb') as file_analyzed:
+            pickle.dump(df, file_analyzed)
+        print(f"Dataframes saved as pickle: {pickle_path}")
+
+    def load_df_from_pickle(self, file_name):
+        pickle_path = f"{file_name}.pkl"
+        with open(pickle_path, 'rb') as file_analyzed:
+            df = pickle.load(file_analyzed)
+        return df
+
+    def download_df_as_csv(self, df: pd.DataFrame) -> bytes:
 
         csv_file = df.to_csv(index=False).encode('utf-8')
         # if preview:
@@ -108,65 +133,67 @@ class SentimentManager:
             return None
         else:
             df_analyzed_results = self.df_analyzed_results
-        columns = df_analyzed_results.columns
-        for i, column in enumerate(columns):
-            sns.set_style("white")
-            fig, axes = plt.subplots(figsize=(10, 4), sharey=True)
+            columns = df_analyzed_results.columns
+            for i, column in enumerate(columns):
+                sns.set_style("white")
+                fig, axes = plt.subplots(figsize=(10, 4), sharey=True)
 
-            sns.histplot(df_analyzed_results[column], kde=True, label=column, bins=10, binwidth=1, ax=axes)
-            axes.set_ylabel("Density")
-            axes.set_title(f"{column}")
-            # axes.legend(loc="upper right")
-            axes.set_xlim(-5, 5)
-            axes.set_xlabel("")
-            bins = range(-5, 6)
-            axes.set_xticks(bins)
-            axes.yaxis.set_major_locator(MaxNLocator(integer=True))
-            sns.despine()
-            plt.tight_layout()
+                sns.histplot(df_analyzed_results[column], kde=True, label=column, bins=10, binwidth=1, ax=axes)
+                axes.set_ylabel("Density")
+                axes.set_title(f"{column}")
+                # axes.legend(loc="upper right")
+                axes.set_xlim(-5, 5)
+                axes.set_xlabel("")
+                bins = range(-5, 6)
+                axes.set_xticks(bins)
+                axes.yaxis.set_major_locator(MaxNLocator(integer=True))
+                sns.despine()
+                plt.tight_layout()
 
-            save_path = None  # 초기화
-            if output_folder is not None and file_name is not None:
-                save_path = output_folder / f"{file_name}_{column}_histogram.png"
-            if save_path is not None:
-                plt.savefig(save_path, format='png', dpi=300)
-            plt.show()
+                save_path = None  # 초기화
+                if output_folder is not None and file_name is not None:
+                    save_path = output_folder / f"{file_name}_{column}_histogram.png"
+                if save_path is not None:
+                    plt.savefig(save_path, format='png', dpi=300)
+                plt.show()
 
     def plot_hist_all(self, output_folder=None, file_name=None):
-        if self.df_analyzed_results is None:
+        if  self.df_analyzed_results is None:
             return None
         else:
             df_analyzed_results = self.df_analyzed_results
-        sns.set(style="white")
-        fig, axes = plt.subplots(figsize=(10, 4))
+            sns.set(style="white")
+            fig, axes = plt.subplots(figsize=(10, 4))
 
-        # 데이터프레임의 각 열에 대해 히스토그램 그리기
-        for i, column in enumerate(df_analyzed_results.columns):
-          color = sns.color_palette("Set1", len(df_analyzed_results.columns))[i]  # Set1 컬러맵 사용
-          sns.histplot(df_analyzed_results[column], kde=True, label=column, bins=10, binwidth=1, ax=axes, color=color)
+            # 데이터프레임의 각 열에 대해 히스토그램 그리기
+            for i, column in enumerate(df_analyzed_results.columns):
+              color = sns.color_palette("Set1", len(df_analyzed_results.columns))[i]  # Set1 컬러맵 사용
+              sns.histplot(df_analyzed_results[column], kde=True, label=column, bins=10, binwidth=1, ax=axes, color=color)
 
-        # x축 설정
-        axes.set_xlim(-5, 5)
-        bins = range(-5, 6)
-        axes.set_xticks(bins)
+            # x축 설정
+            axes.set_xlim(-5, 5)
+            bins = range(-5, 6)
+            axes.set_xticks(bins)
 
-        # y축 눈금 설정 (정수로)
-        axes.yaxis.set_major_locator(MaxNLocator(integer=True))
+            # y축 눈금 설정 (정수로)
+            axes.yaxis.set_major_locator(MaxNLocator(integer=True))
 
-        # 레이블 및 타이틀 설정
-        axes.set_ylabel("Density")
-        axes.set_title("")
-        axes.set_xlabel("")
+            # 레이블 및 타이틀 설정
+            axes.set_ylabel("Density")
+            axes.set_title("")
+            axes.set_xlabel("")
 
-        # 범례 표시
-        axes.legend()
-        sns.despine()
+            # 범례 표시
+            axes.legend()
+            sns.despine()
 
-        save_path = None  # 초기화
-        if output_folder is not None and file_name is not None:
-          save_path = output_folder / f"{file_name}_all_columns_histogram.png"
-        if save_path is not None:
-          plt.savefig(save_path, format='png', dpi=300)
+            save_path = None  # 초기화
+            if output_folder is not None and file_name is not None:
+              save_path = output_folder / f"{file_name}_all_columns_histogram.png"
+            if save_path is not None:
+              plt.savefig(save_path, format='png', dpi=300)
 
-        # 그래프 출력
-        plt.show()
+            # 그래프 출력
+            plt.show()
+
+

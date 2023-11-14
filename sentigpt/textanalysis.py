@@ -8,14 +8,9 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import nltk
 
-class DataAnalysis:
-
-    def __init__(self, comments):
+class TextAnalysis:
+    def __init__(self, comments:str):
         self.comments = comments
-
-    def call_example_comments(self) -> pd.DataFrame:
-        df = pd.DataFrame({'comments': self.comments})
-        return df
 
     def prepare_nouns(self):
         all_words = []
@@ -54,12 +49,3 @@ class DataAnalysis:
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis("off")
         plt.show()
-
-# Example usage:
-comments_data = ["Sample comment 1", "Sample comment 2", "Sample comment 3"]
-data_analysis = DataAnalysis(comments_data)
-comments_df = data_analysis.call_example_comments()
-nouns_list = data_analysis.prepare_nouns()
-word_freq_df = data_analysis.prepare_word_freq(nouns_list)
-data_analysis.plot_freq(word_freq_df)
-data_analysis.plot_wordcloud(nouns_list)

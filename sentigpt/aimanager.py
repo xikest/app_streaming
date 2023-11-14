@@ -11,7 +11,7 @@ class AIManager:
 
     def get_text_from_gpt(self, prompt):
         # "gpt-3.5-turbo"
-        response = self.client.chat.completions.create(model=self.gpt_model, messages=prompt, timeout=60)
+        response = self.client.chat.completions.create(model=self.gpt_model, temperature=0.1,messages=prompt, timeout=60)
         answer = response.choices[0].message.content
         return answer
     def getImageURLFromDALLE(self, user_input):
