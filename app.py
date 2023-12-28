@@ -1,7 +1,7 @@
 from functions.gpt_assistant import GPTAssistant
 import streamlit as st
 def main():
-    st.title("ChatGPT-like clone")
+    st.title("Senti-GPT")
 
     if "openai_model" not in st.session_state:
         st.session_state["openai_model"] = "gpt-4-1106-preview"
