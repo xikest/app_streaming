@@ -1,6 +1,5 @@
 from functions.gpt_assistant import GPTAssistant
 import streamlit as st
-import toml
 def main():
     st.title("Senti-GPT")
 
@@ -10,8 +9,7 @@ def main():
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    secrets = toml.load("secrets.toml")
-    gpt_assistant = GPTAssistant(api_key=secrets.get("OPENAI_API_KEY"))
+    gpt_assistant = GPTAssistant(api_key=st.secrets["OPENAI_API_KEY"])
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
