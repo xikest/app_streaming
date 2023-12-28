@@ -9,7 +9,8 @@ def main():
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    gpt_assistant = GPTAssistant(api_key=st.secrets["OPENAI_API_KEY"])
+    apikey = st.text_input("input your GPT api key")
+    gpt_assistant = GPTAssistant(api_key=apikey)
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
