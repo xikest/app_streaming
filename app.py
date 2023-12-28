@@ -1,102 +1,36 @@
+from functions.gpt_assistant import GPTAssistant
 import streamlit as st
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sentigpt.sentimentmanager import SentimentManager
-
 def main():
-    # basic setting
-    st.set_page_config(
-        page_title="plot stream",
-        layout="wide")
+    st.title("ChatGPT-like clone")
 
-    # session state initialize
-    st.session_state["API_KEY"] = None
-    st.session_state["upload"] = None
-    st.session_state["result"] = None
-    st.session_state["keywords"] = ["brightness", "color", "contrast", "reflection", "viewing angle"]
+    if "openai_model" not in st.session_state:
+        st.session_state["openai_model"] = "gpt-4-1106-preview"
 
-    # Title
-    st.header("Plot Visualization")
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
 
-    # Side bar
-    with st.sidebar:
-        # Basic description
-        st.subheader("Project Description")
-        st.write("This project supports basic analysis.")
-        with st.expander("Usage", expanded=True):
-            st.write("`Sentiment Analysis`")
-        st.markdown("---")
-        # Open AI API 키 입력받기
-        API_KEY = st.text_input(label="OPENAI API 키", placeholder="Enter Your API Key", value="",
-                                       type="password")
+    gpt_assistant = GPTAssistant(api_key=st.secrets["OPENAI_API_KEY"])
 
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-        st.session_state["API_KEY"] = API_KEY
-        stm = SentimentManager(API_KEY)
-        # print(st.session_state["API_KEY"] is True)
-        st.markdown("---")
+    if prompt := st.chat_input("What is up?"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-        st.write(
-            """     
-            Written by TJ.Kim ☕
-            """
-        )
-        st.markdown("---")
-
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("1. Data Preparation")
-        df_sample_sentences = stm.sample_sentences()
-        stm.download_df_as_csv(df_sample_sentences, file_name="sample_text_data", key="download_text_sample_csv", label="Sample download")
-        if st.session_state["API_KEY"]:
-            df_uploaded = st.file_uploader("Upload Data", key="text_data")
-            st.markdown("---")
-            if  df_uploaded is not st.session_state["upload"]: ## 업로드
-                st.session_state["upload"] = df_uploaded
-                # text_data_uploaded = df_sample_sentences
-                df_uploaded = stm.read_df_from(df_uploaded)
-                df_uploaded['sentences'] = df_uploaded['sentences'].apply(stm.preprocess_text)
-                try:
-                    df_sentences = df_uploaded
-                    list_sentences = [sentence for sentence in df_sentences["sentences"]]  # 리스트로 변환
-                    list_keywords = st.session_state["keywords"]
-                    df_analyzed_results = stm.analyze_sentences(list_sentences, list_keywords)
-                    st.subheader("2. Analysis results")
-                    stm.download_df_as_csv(df_analyzed_results, file_name="sentiment_analysis", key="download_csv_text_analysis", label="Result download")
-                    st.dataframe(df_analyzed_results.head(3))
-                    st.session_state["result"] = df_analyzed_results
-                    st.session_state["API_KEY"] = None
-                    print('fin')
-                except:
-                    st.error('Re-Check', icon="🚨")
-            else:
-                st.error("UPLOAD the data following the guide.",icon="🚨")
-        else:
-            st.error("Input your GPT API KEY.", icon="🚨")
-    with col2:
-        if  st.session_state["result"] is not None:
-            st.subheader("3. Visualization")
-            df_analyzed_results = st.session_state["result"]
-
-            tab1, tab2, tab3, tab4, tab5 = st.tabs(st.session_state["keywords"])
-            tabs = [tab1, tab2, tab3, tab4, tab5]
-
-            columns = df_analyzed_results.columns
-            for i, column in enumerate(columns):
-                with tabs[i]:
-                    sns.set_style("white")
-                    fig, axes = plt.subplots(figsize=(10, 4))
-                    sns.histplot(df_analyzed_results[column], kde=True, label=column, bins=10, ax=axes)
-                    axes.set_ylabel("Density")
-                    axes.set_title(f"{column}")
-                    # axes.legend(loc="upper right")
-                    axes.set_xlim(1, 10)
-                    axes.set_xlabel("")
-                    sns.despine()
-                    plt.tight_layout()
-                    st.pyplot(fig, use_container_width=True)
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
+            response_messages = [
+                {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages
+            ]
+            full_response = gpt_assistant.generate_response(response_messages)
+            message_placeholder.markdown(full_response + "▌")
+            message_placeholder.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 
 if __name__ == "__main__":
     main()
-
