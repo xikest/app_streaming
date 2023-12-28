@@ -7,7 +7,7 @@ def main():
     with st.sidebar:
         # st.subheader("Setting")
         st.session_state["apikey"] = st.text_input("GPT API KEY")
-        st.session_state["role"] = st.text_input(label="Assistant ROLE",
+        st.session_state["role"] = st.text_input(label="Assistant Role",
                                                  value="You are an economist and a risk manager with excellent skills.")
         st.session_state["model"] = st.radio(label="model",
                                              options=["gpt-4-1106-preview","gpt-4-32k","gpt-3.5-turbo-1106"])
