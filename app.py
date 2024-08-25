@@ -10,7 +10,7 @@ def main():
         st.session_state["role"] = st.text_input(label="Assistant Role",
                                                  value="You are an economist and a risk manager with excellent skills.")
         st.session_state["model"] = st.radio(label="model",
-                                             options=["gpt-4-1106-preview","gpt-4-32k","gpt-3.5-turbo-1106"])
+                                             options=["gpt-4o-mini","gpt-4o-mini-2024-07-18"])
         st.session_state["temp"] = st.slider("Temperature", min_value=0.5, max_value=1.0, value=0.8, step=0.1)
 
         with st.expander("Profile", expanded=False):
